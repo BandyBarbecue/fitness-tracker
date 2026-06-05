@@ -1,0 +1,124 @@
+{
+  "planPath": "docs/superpowers/plans/2026-06-05-fitness-tracker-plan.md",
+  "tasks": [
+    {
+      "id": 0,
+      "subject": "Task 0: Project Scaffold",
+      "status": "pending",
+      "description": "**Goal:** Create a working Next.js 15 project with TypeScript, Tailwind, all required packages, folder structure, and environment variable template.\n\n**Files:**\n- Create: entire project root via `create-next-app`\n- Create: `.env.local.example`\n- Create: `vitest.config.ts`\n- Create: `app/globals.css` (replace default)\n\n**Acceptance Criteria:**\n- [ ] `npm run dev` starts without errors on `http://localhost:3000`\n- [ ] `npm run build` compiles without TypeScript errors\n- [ ] `npx vitest run` exits 0 with no test files found\n- [ ] `.env.local.example` lists all required variables\n\n**Verify:** `npm run build` → `✓ Compiled successfully`\n\n```json:metadata\n{\"files\": [\"vitest.config.ts\", \".env.local.example\", \"app/globals.css\"], \"verifyCommand\": \"npm run build\", \"acceptanceCriteria\": [\"npm run dev starts without errors\", \"npm run build compiles without TypeScript errors\", \"vitest exits 0\", \".env.local.example lists all required variables\"]}\n```"
+    },
+    {
+      "id": 1,
+      "subject": "Task 1: Database Schema & RLS",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "**Goal:** Create all Supabase tables, RLS policies, and storage buckets via a migration file.\n\n**Files:**\n- Create: `supabase/migrations/0001_schema.sql`\n- Create: `types/database.ts` (generated)\n\n**Acceptance Criteria:**\n- [ ] All 5 tables exist in Supabase with correct columns\n- [ ] RLS enabled on all tables\n- [ ] Both storage buckets exist and are private\n- [ ] `types/database.ts` generated successfully\n\n**Verify:** Run migration in Supabase SQL editor — no errors. Then `npx supabase gen types typescript` succeeds.\n\n```json:metadata\n{\"files\": [\"supabase/migrations/0001_schema.sql\", \"types/database.ts\"], \"verifyCommand\": \"npx supabase gen types typescript --project-id <ID> > types/database.ts\", \"acceptanceCriteria\": [\"All 5 tables created\", \"RLS enabled on all tables\", \"Both storage buckets created as private\", \"TypeScript types generated\"]}\n```"
+    },
+    {
+      "id": 2,
+      "subject": "Task 2: Auth & Supabase Clients",
+      "status": "pending",
+      "blockedBy": [1],
+      "description": "**Goal:** Wire up Supabase email+password auth — login page, session middleware, and reusable server/browser client factories.\n\n**Files:**\n- Create: `lib/supabase/client.ts`\n- Create: `lib/supabase/server.ts`\n- Create: `middleware.ts`\n- Create: `app/(auth)/login/page.tsx`\n- Create: `components/providers.tsx`\n- Modify: `app/layout.tsx`\n\n**Acceptance Criteria:**\n- [ ] Visiting `/dashboard` while logged out redirects to `/login`\n- [ ] Submitting correct credentials redirects to `/dashboard`\n- [ ] Visiting `/login` while logged in redirects to `/dashboard`\n- [ ] `npm run build` passes\n\n**Verify:** Manual — open `http://localhost:3000`, confirm redirect to `/login`. Log in, confirm redirect to `/dashboard`.\n\n```json:metadata\n{\"files\": [\"lib/supabase/client.ts\", \"lib/supabase/server.ts\", \"middleware.ts\", \"app/(auth)/login/page.tsx\", \"components/providers.tsx\", \"app/layout.tsx\"], \"verifyCommand\": \"npm run build\", \"acceptanceCriteria\": [\"Unauthenticated visit to /dashboard redirects to /login\", \"Login with correct credentials redirects to /dashboard\", \"Authenticated visit to /login redirects to /dashboard\"]}\n```"
+    },
+    {
+      "id": 3,
+      "subject": "Task 3: App Shell & Navigation",
+      "status": "pending",
+      "blockedBy": [2],
+      "description": "**Goal:** Build the authenticated layout with a bottom tab bar (mobile) and sidebar (desktop), and stub all five tab pages.\n\n**Files:**\n- Create: `app/(app)/layout.tsx`\n- Create: `components/nav/bottom-nav.tsx`\n- Create: `components/nav/sidebar.tsx`\n- Create: all 5 stub pages\n\n**Acceptance Criteria:**\n- [ ] All 5 tab routes render without errors\n- [ ] `/log` redirects to `/log/[today]`\n- [ ] Bottom nav visible on mobile, sidebar on desktop\n- [ ] Active tab highlighted with accent colour\n\n**Verify:** `npm run dev` → tap each tab on mobile viewport in DevTools.\n\n```json:metadata\n{\"files\": [\"app/(app)/layout.tsx\", \"components/nav/bottom-nav.tsx\", \"components/nav/sidebar.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"All 5 tab routes render\", \"/log redirects to /log/today\", \"Bottom nav on mobile, sidebar on desktop\", \"Active tab highlighted\"]}\n```"
+    },
+    {
+      "id": 4,
+      "subject": "Task 4: Daily Log CRUD",
+      "status": "pending",
+      "blockedBy": [3],
+      "description": "**Goal:** Build the daily log entry form at `/log/[date]` with all fields, session type picker, and Supabase upsert.\n\n**Files:**\n- Create: `components/log/log-form.tsx`\n- Create: `components/log/session-picker.tsx`\n- Create: `lib/queries/daily-logs.ts`\n- Modify: `app/(app)/log/[date]/page.tsx`\n\n**Acceptance Criteria:**\n- [ ] Submitting the form creates a `daily_logs` row\n- [ ] Returning to the same date pre-fills all fields\n- [ ] Session type pill selector works\n- [ ] Protein field visually distinct (accent border)\n- [ ] Optional fields hidden until tapped\n\n**Verify:** Create an entry → refresh → confirm form pre-fills.\n\n```json:metadata\n{\"files\": [\"components/log/log-form.tsx\", \"components/log/session-picker.tsx\", \"lib/queries/daily-logs.ts\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"Form creates daily_logs row\", \"Existing date pre-fills form\", \"Session picker works\", \"Protein field accent styled\", \"Optional fields collapsed\"]}\n```"
+    },
+    {
+      "id": 5,
+      "subject": "Task 5: Rolling Average Utility",
+      "status": "pending",
+      "blockedBy": [4],
+      "description": "**Goal:** Implement and fully test the 7-day rolling average function.\n\n**Files:**\n- Create: `lib/utils/rolling-average.ts`\n- Create: `lib/utils/rolling-average.test.ts`\n\n**Acceptance Criteria:**\n- [ ] All 5 tests pass\n- [ ] Single data point returns itself\n- [ ] Partial window uses available points only\n- [ ] Empty input returns empty array\n- [ ] Rounds to one decimal place\n\n**Verify:** `npm test` → `5 tests passed`\n\n```json:metadata\n{\"files\": [\"lib/utils/rolling-average.ts\", \"lib/utils/rolling-average.test.ts\"], \"verifyCommand\": \"npm test\", \"acceptanceCriteria\": [\"5 tests pass\", \"Empty input returns []\", \"Single point returns itself\", \"Partial window averages correctly\", \"Rounds to 1dp\"]}\n```"
+    },
+    {
+      "id": 6,
+      "subject": "Task 6: Weight Trend Chart",
+      "status": "pending",
+      "blockedBy": [5],
+      "description": "**Goal:** Build the Recharts weight trend chart with rolling average overlay.\n\n**Files:**\n- Create: `components/dashboard/weight-chart.tsx`\n- Modify: `lib/queries/daily-logs.ts` (add useWeightHistory)\n\n**Acceptance Criteria:**\n- [ ] Green rolling-average line and faint grey daily line render\n- [ ] Chart is responsive\n- [ ] Tooltip shows both values on hover\n- [ ] Empty state shown when no data\n\n**Verify:** Add log entries with weight → dashboard shows chart with both lines.\n\n```json:metadata\n{\"files\": [\"components/dashboard/weight-chart.tsx\", \"lib/queries/daily-logs.ts\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"Green rolling avg line renders\", \"Faint grey daily line renders\", \"Chart responsive\", \"Tooltip shows both values\", \"Empty state shown\"]}\n```"
+    },
+    {
+      "id": 7,
+      "subject": "Task 7: Dashboard — Macro Cards, Steps & Streak",
+      "status": "pending",
+      "blockedBy": [6],
+      "description": "**Goal:** Complete the dashboard with protein hero card, calories/steps cards, and streak row.\n\n**Files:**\n- Create: `components/dashboard/protein-card.tsx`\n- Create: `components/dashboard/metric-card.tsx`\n- Create: `components/dashboard/streak-row.tsx`\n- Create: `lib/queries/targets.ts`\n- Create: `lib/utils/format.ts`\n- Modify: `app/(app)/dashboard/page.tsx`\n\n**Acceptance Criteria:**\n- [ ] Protein card shows value vs target with progress bar and colour label\n- [ ] Calories and steps cards with progress bars\n- [ ] Streak row shows streak, logs this week, weekly weight delta\n- [ ] Dashboard correct at 390px\n\n**Verify:** Log an entry → dashboard shows correct values.\n\n```json:metadata\n{\"files\": [\"components/dashboard/protein-card.tsx\", \"components/dashboard/metric-card.tsx\", \"components/dashboard/streak-row.tsx\", \"lib/queries/targets.ts\", \"lib/utils/format.ts\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"Protein card renders with bar\", \"Calories and steps cards render\", \"Streak row shows correct stats\", \"Layout correct at 390px\"]}\n```"
+    },
+    {
+      "id": 8,
+      "subject": "Task 8: Settings Page",
+      "status": "pending",
+      "blockedBy": [7],
+      "description": "**Goal:** Build the settings page where the user can edit all targets and personal stats.\n\n**Files:**\n- Modify: `app/(app)/settings/page.tsx`\n\n**Acceptance Criteria:**\n- [ ] Form pre-fills from targets row\n- [ ] Saving updates targets via upsert\n- [ ] Dashboard metrics update after save\n- [ ] Toast on save success\n\n**Verify:** Change protein target → go to Dashboard → confirm updated.\n\n```json:metadata\n{\"files\": [\"app/(app)/settings/page.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"Form pre-fills from DB\", \"Save updates targets row\", \"Dashboard reflects new targets\", \"Toast on success\"]}\n```"
+    },
+    {
+      "id": 9,
+      "subject": "Task 9: Screenshot Upload to Supabase Storage",
+      "status": "pending",
+      "blockedBy": [8],
+      "description": "**Goal:** Build the screenshot upload UI — uploads to private screenshots bucket, creates food_screenshots row.\n\n**Files:**\n- Create: `components/log/screenshot-uploader.tsx`\n- Modify: `components/log/log-form.tsx`\n\n**Acceptance Criteria:**\n- [ ] File picker opens on tap\n- [ ] File stored at `{user_id}/{uuid}.{ext}` in screenshots bucket\n- [ ] food_screenshots row created with confirmed=false\n- [ ] Error shown on upload failure\n\n**Verify:** Upload screenshot → check Supabase Storage + food_screenshots table.\n\n```json:metadata\n{\"files\": [\"components/log/screenshot-uploader.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"File picker opens\", \"File in Supabase Storage\", \"food_screenshots row created with confirmed=false\", \"Error shown on failure\"]}\n```"
+    },
+    {
+      "id": 10,
+      "subject": "Task 10: Claude Vision Extraction & Confirmation UI",
+      "status": "pending",
+      "blockedBy": [9],
+      "description": "**Goal:** Build the server-side macro extraction API route and client-side confirmation screen.\n\n**Files:**\n- Create: `app/api/ai/extract-macros/route.ts`\n- Create: `lib/anthropic/extract-macros.ts`\n- Create: `components/log/macro-confirm.tsx`\n- Modify: `components/log/log-form.tsx`\n\n**Acceptance Criteria:**\n- [ ] POST /api/ai/extract-macros returns extracted macros for valid screenshot\n- [ ] Unauthenticated requests return 401\n- [ ] Confirmation screen shows extracted values in editable inputs\n- [ ] Confirming pre-fills log form\n- [ ] Manual entry link skips AI values\n\n**Verify:** Upload MFP screenshot → confirm screen → form pre-filled → food_screenshots.confirmed=true after save.\n\n```json:metadata\n{\"files\": [\"app/api/ai/extract-macros/route.ts\", \"lib/anthropic/extract-macros.ts\", \"components/log/macro-confirm.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"API returns extracted macros\", \"401 for unauthenticated requests\", \"Confirm screen shows editable values\", \"Confirm pre-fills form\", \"food_screenshots.confirmed=true after save\"]}\n```"
+    },
+    {
+      "id": 11,
+      "subject": "Task 11: Progress Photos — Upload & Gallery",
+      "status": "pending",
+      "blockedBy": [10],
+      "description": "**Goal:** Build the progress photos tab — upload, store in private bucket, display in gallery.\n\n**Files:**\n- Create: `components/photos/photo-gallery.tsx`\n- Create: `lib/queries/photos.ts`\n- Modify: `app/(app)/photos/page.tsx`\n\n**Acceptance Criteria:**\n- [ ] File picker opens on Add tap\n- [ ] Photo appears in gallery after upload without refresh\n- [ ] Photos sorted newest-first with date label\n- [ ] Photos load via signed URLs\n- [ ] Empty state shown\n\n**Verify:** Upload 2 photos → both appear in gallery with correct dates.\n\n```json:metadata\n{\"files\": [\"components/photos/photo-gallery.tsx\", \"lib/queries/photos.ts\", \"app/(app)/photos/page.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"Photos upload to Supabase Storage\", \"Gallery shows photos after upload\", \"Sorted newest-first\", \"Signed URLs used\", \"Empty state shown\"]}\n```"
+    },
+    {
+      "id": 12,
+      "subject": "Task 12: Progress Photo Comparison View",
+      "status": "pending",
+      "blockedBy": [11],
+      "description": "**Goal:** Add side-by-side photo comparison view to the photos tab.\n\n**Files:**\n- Create: `components/photos/photo-comparison.tsx`\n- Modify: `components/photos/photo-gallery.tsx`\n\n**Acceptance Criteria:**\n- [ ] Compare toggle button in photos header\n- [ ] User can select two photos from dropdowns\n- [ ] Both appear side by side with date labels\n- [ ] Works at 390px\n\n**Verify:** Upload 2+ photos → tap Compare → select two → side-by-side display.\n\n```json:metadata\n{\"files\": [\"components/photos/photo-comparison.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"Compare toggle works\", \"Two photos selectable\", \"Side-by-side at 390px\", \"Date labels shown\"]}\n```"
+    },
+    {
+      "id": 13,
+      "subject": "Task 13: Check-in Prompt Builder",
+      "status": "pending",
+      "blockedBy": [12],
+      "description": "**Goal:** Implement and fully test the weekly check-in prompt builder.\n\n**Files:**\n- Create: `lib/anthropic/weekly-checkin.ts`\n- Create: `lib/anthropic/weekly-checkin.test.ts`\n\n**Acceptance Criteria:**\n- [ ] All 5 new tests pass (10 total)\n- [ ] Prompt includes height, weight, training split from targets\n- [ ] Prompt includes all log rows as a table\n- [ ] Protein hit rate calculated correctly\n- [ ] Goal rate included\n\n**Verify:** `npm test` → `10 tests passed`\n\n```json:metadata\n{\"files\": [\"lib/anthropic/weekly-checkin.ts\", \"lib/anthropic/weekly-checkin.test.ts\"], \"verifyCommand\": \"npm test\", \"acceptanceCriteria\": [\"10 tests pass\", \"Prompt includes targets from DB\", \"Log table included\", \"Protein hit rate calculated\", \"Goal rate included\"]}\n```"
+    },
+    {
+      "id": 14,
+      "subject": "Task 14: AI Weekly Check-in — API Route & Coach Tab UI",
+      "status": "pending",
+      "blockedBy": [13],
+      "description": "**Goal:** Build the streaming check-in API route and Coach tab UI.\n\n**Files:**\n- Create: `app/api/ai/weekly-checkin/route.ts`\n- Create: `components/check-in/checkin-ui.tsx`\n- Modify: `app/(app)/check-in/page.tsx`\n\n**Acceptance Criteria:**\n- [ ] POST /api/ai/weekly-checkin streams text response\n- [ ] Unauthenticated requests return 401\n- [ ] Streaming text renders in real time with typing cursor\n- [ ] Completed summary saved to ai_checkins\n- [ ] Past check-ins listed below trigger button\n\n**Verify:** Tap Run check-in → text streams → ai_checkins row created.\n\n```json:metadata\n{\"files\": [\"app/api/ai/weekly-checkin/route.ts\", \"components/check-in/checkin-ui.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"API streams text\", \"401 for unauthenticated\", \"Real-time streaming UI\", \"Saved to ai_checkins\", \"Past check-ins listed\"]}\n```"
+    },
+    {
+      "id": 15,
+      "subject": "Task 15: Design Polish & Mobile QA",
+      "status": "pending",
+      "blockedBy": [14],
+      "description": "**Goal:** Polish the full app — entrance animations, focus rings, iOS safe area, and mobile QA pass.\n\n**Files:**\n- Modify: `app/globals.css`\n- Modify: various components\n\n**Acceptance Criteria:**\n- [ ] Cards fade in on mount\n- [ ] All loading states use consistent skeleton\n- [ ] No layout breaks at 390px\n- [ ] All inputs have accent focus ring\n- [ ] iOS safe area handled in bottom nav\n\n**Verify:** Open at 390px in DevTools. Walk every tab end-to-end.\n\n```json:metadata\n{\"files\": [\"app/globals.css\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"Cards animate on mount\", \"No 390px layout breaks\", \"Accent focus rings\", \"iOS safe area bottom nav\"]}\n```"
+    },
+    {
+      "id": 16,
+      "subject": "Task 16: Vercel Deployment",
+      "status": "pending",
+      "blockedBy": [15],
+      "description": "**Goal:** Deploy to Vercel with correct environment variables and confirm end-to-end in production.\n\n**Files:**\n- No code changes — configuration only\n\n**Acceptance Criteria:**\n- [ ] `vercel deploy --prod` succeeds\n- [ ] Login works on production URL\n- [ ] Dashboard loads real data\n- [ ] Screenshot extraction works in production\n- [ ] AI check-in streams in production\n\n**Verify:** Open production Vercel URL on a real phone. Log in, create entry, run check-in.\n\n```json:metadata\n{\"files\": [], \"verifyCommand\": \"vercel deploy --prod\", \"acceptanceCriteria\": [\"Build succeeds on Vercel\", \"Login works on production URL\", \"Dashboard loads data\", \"Screenshot extraction works\", \"Check-in streams\"]}\n```"
+    }
+  ],
+  "lastUpdated": "2026-06-05"
+}

@@ -4,13 +4,13 @@
     {
       "id": 0,
       "subject": "Task 0: Project Scaffold",
-      "status": "pending",
+      "status": "completed",
       "description": "**Goal:** Create a working Next.js 15 project with TypeScript, Tailwind, all required packages, folder structure, and environment variable template.\n\n**Files:**\n- Create: entire project root via `create-next-app`\n- Create: `.env.local.example`\n- Create: `vitest.config.ts`\n- Create: `app/globals.css` (replace default)\n\n**Acceptance Criteria:**\n- [ ] `npm run dev` starts without errors on `http://localhost:3000`\n- [ ] `npm run build` compiles without TypeScript errors\n- [ ] `npx vitest run` exits 0 with no test files found\n- [ ] `.env.local.example` lists all required variables\n\n**Verify:** `npm run build` → `✓ Compiled successfully`\n\n```json:metadata\n{\"files\": [\"vitest.config.ts\", \".env.local.example\", \"app/globals.css\"], \"verifyCommand\": \"npm run build\", \"acceptanceCriteria\": [\"npm run dev starts without errors\", \"npm run build compiles without TypeScript errors\", \"vitest exits 0\", \".env.local.example lists all required variables\"]}\n```"
     },
     {
       "id": 1,
       "subject": "Task 1: Database Schema & RLS",
-      "status": "pending",
+      "status": "completed",
       "blockedBy": [0],
       "description": "**Goal:** Create all Supabase tables, RLS policies, and storage buckets via a migration file.\n\n**Files:**\n- Create: `supabase/migrations/0001_schema.sql`\n- Create: `types/database.ts` (generated)\n\n**Acceptance Criteria:**\n- [ ] All 5 tables exist in Supabase with correct columns\n- [ ] RLS enabled on all tables\n- [ ] Both storage buckets exist and are private\n- [ ] `types/database.ts` generated successfully\n\n**Verify:** Run migration in Supabase SQL editor — no errors. Then `npx supabase gen types typescript` succeeds.\n\n```json:metadata\n{\"files\": [\"supabase/migrations/0001_schema.sql\", \"types/database.ts\"], \"verifyCommand\": \"npx supabase gen types typescript --project-id <ID> > types/database.ts\", \"acceptanceCriteria\": [\"All 5 tables created\", \"RLS enabled on all tables\", \"Both storage buckets created as private\", \"TypeScript types generated\"]}\n```"
     },
@@ -120,5 +120,5 @@
       "description": "**Goal:** Deploy to Vercel with correct environment variables and confirm end-to-end in production.\n\n**Files:**\n- No code changes — configuration only\n\n**Acceptance Criteria:**\n- [ ] `vercel deploy --prod` succeeds\n- [ ] Login works on production URL\n- [ ] Dashboard loads real data\n- [ ] Screenshot extraction works in production\n- [ ] AI check-in streams in production\n\n**Verify:** Open production Vercel URL on a real phone. Log in, create entry, run check-in.\n\n```json:metadata\n{\"files\": [], \"verifyCommand\": \"vercel deploy --prod\", \"acceptanceCriteria\": [\"Build succeeds on Vercel\", \"Login works on production URL\", \"Dashboard loads data\", \"Screenshot extraction works\", \"Check-in streams\"]}\n```"
     }
   ],
-  "lastUpdated": "2026-06-05"
+  "lastUpdated": "2026-06-05T00:01:00Z"
 }

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { SessionPicker, type SessionType } from './session-picker'
 import { useDailyLog, useUpsertLog } from '@/lib/queries/daily-logs'
 import { createClient } from '@/lib/supabase/client'
+import { ScreenshotUploader } from './screenshot-uploader'
 
 interface Props { date: string }
 
@@ -99,6 +100,15 @@ export function LogForm({ date }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-8 pt-6 max-w-lg mx-auto">
       <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{date}</h1>
+
+      <ScreenshotUploader
+        dailyLogId={existing?.id ?? null}
+        date={date}
+        onUploaded={({ screenshotId, imagePath }) => {
+          // Will trigger AI extraction in Task 10
+          console.log('Uploaded', screenshotId, imagePath)
+        }}
+      />
 
       {numInput('Morning Weight', 'weight_kg', 'kg')}
 

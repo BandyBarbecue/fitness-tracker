@@ -57,3 +57,22 @@ export function useUpsertLog() {
     },
   })
 }
+
+export function useWeightHistory(days = 30) {
+  return useQuery({
+    queryKey: ['daily-logs', 'weight', days],
+    queryFn: async () => {
+      const supabase = createClient()
+      const from = new Date()
+      from.setDate(from.getDate() - days)
+      const { data, error } = await supabase
+        .from('daily_logs')
+        .select('date, weight_kg')
+        .not('weight_kg', 'is', null)
+        .gte('date', from.toISOString().split('T')[0])
+        .order('date', { ascending: true })
+      if (error) throw error
+      return (data ?? []) as Array<{ date: string; weight_kg: number }>
+    },
+  })
+}

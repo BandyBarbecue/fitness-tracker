@@ -1,0 +1,185 @@
+<h2>Daily Log Entry Form</h2>
+<p class="subtitle">How should optional fields (sleep, mood) and the screenshot button be presented? Two approaches.</p>
+
+<div class="split" style="gap:28px;align-items:flex-start;margin-top:24px">
+
+  <!-- Option A: All on one scroll -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="flex:1;cursor:pointer">
+    <div class="card-body">
+      <h3>A — Single scroll, optionals collapsed</h3>
+      <p style="color:var(--subtle);font-size:0.82rem">Everything on one screen. Optional fields hidden behind a "+ More" row. Fast for daily use.</p>
+    </div>
+    <div class="card-image" style="padding:0 14px 16px">
+      <div style="background:#0a0a0a;border-radius:20px;border:1.5px solid #1f1f1f;overflow:hidden;max-width:260px;margin:0 auto;font-family:system-ui,sans-serif">
+
+        <!-- Header -->
+        <div style="padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #161616">
+          <div>
+            <div style="font-size:11px;color:#525252;letter-spacing:0.05em;text-transform:uppercase">Thursday</div>
+            <div style="font-size:16px;font-weight:700;color:#f0f0f0">Log Entry</div>
+          </div>
+          <div style="background:#141414;border:1px solid #1f1f1f;border-radius:8px;padding:4px 10px;font-size:11px;color:#a0a0a0">5 Jun</div>
+        </div>
+
+        <div style="padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+
+          <!-- Screenshot CTA - prominent at top -->
+          <div style="background:#0f1f17;border:1px dashed #34d39960;border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;background:#34d39920;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <div style="width:16px;height:16px;background:#34d399;border-radius:3px;opacity:0.9"></div>
+            </div>
+            <div>
+              <div style="font-size:11px;font-weight:600;color:#34d399">Extract from screenshot</div>
+              <div style="font-size:9px;color:#525252;margin-top:1px">Tap to upload · AI fills macros</div>
+            </div>
+          </div>
+
+          <!-- Weight -->
+          <div>
+            <div style="font-size:9px;color:#525252;font-weight:600;letter-spacing:0.06em;margin-bottom:5px">MORNING WEIGHT</div>
+            <div style="background:#141414;border:1px solid #1f1f1f;border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:22px;font-weight:700;color:#f0f0f0">86.1</span>
+              <span style="font-size:12px;color:#525252">kg</span>
+            </div>
+          </div>
+
+          <!-- Macros row -->
+          <div>
+            <div style="font-size:9px;color:#525252;font-weight:600;letter-spacing:0.06em;margin-bottom:5px">NUTRITION</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+              <div style="background:#141414;border:1px solid #1f1f1f;border-radius:8px;padding:8px 6px;text-align:center">
+                <div style="font-size:13px;font-weight:700;color:#f0f0f0">2210</div>
+                <div style="font-size:8px;color:#525252;margin-top:2px">kcal</div>
+              </div>
+              <div style="background:#141414;border:1px solid #34d39940;border-radius:8px;padding:8px 6px;text-align:center">
+                <div style="font-size:13px;font-weight:700;color:#34d399">172</div>
+                <div style="font-size:8px;color:#525252;margin-top:2px">protein</div>
+              </div>
+              <div style="background:#141414;border:1px solid #1f1f1f;border-radius:8px;padding:8px 6px;text-align:center">
+                <div style="font-size:13px;font-weight:700;color:#f0f0f0">68</div>
+                <div style="font-size:8px;color:#525252;margin-top:2px">fat</div>
+              </div>
+              <div style="background:#141414;border:1px solid #1f1f1f;border-radius:8px;padding:8px 6px;text-align:center">
+                <div style="font-size:13px;font-weight:700;color:#f0f0f0">248</div>
+                <div style="font-size:8px;color:#525252;margin-top:2px">carbs</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Steps -->
+          <div>
+            <div style="font-size:9px;color:#525252;font-weight:600;letter-spacing:0.06em;margin-bottom:5px">STEPS</div>
+            <div style="background:#141414;border:1px solid #1f1f1f;border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
+              <span style="font-size:22px;font-weight:700;color:#f0f0f0">8,430</span>
+              <span style="font-size:12px;color:#525252">/ 10,000</span>
+            </div>
+          </div>
+
+          <!-- Session type pills -->
+          <div>
+            <div style="font-size:9px;color:#525252;font-weight:600;letter-spacing:0.06em;margin-bottom:6px">SESSION</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <div style="background:#34d39920;border:1px solid #34d39960;border-radius:20px;padding:5px 12px;font-size:10px;font-weight:600;color:#34d399">Push</div>
+              <div style="background:#141414;border:1px solid #1f1f1f;border-radius:20px;padding:5px 12px;font-size:10px;color:#525252">Pull</div>
+              <div style="background:#141414;border:1px solid #1f1f1f;border-radius:20px;padding:5px 12px;font-size:10px;color:#525252">Legs</div>
+              <div style="background:#141414;border:1px solid #1f1f1f;border-radius:20px;padding:5px 12px;font-size:10px;color:#525252">Upper</div>
+              <div style="background:#141414;border:1px solid #1f1f1f;border-radius:20px;padding:5px 12px;font-size:10px;color:#525252">Rest</div>
+              <div style="background:#141414;border:1px solid #1f1f1f;border-radius:20px;padding:5px 12px;font-size:10px;color:#525252">Cardio</div>
+            </div>
+          </div>
+
+          <!-- Note -->
+          <div style="background:#141414;border:1px solid #1f1f1f;border-radius:10px;padding:10px 12px">
+            <div style="font-size:9px;color:#525252;font-weight:600;letter-spacing:0.06em;margin-bottom:4px">NOTE</div>
+            <div style="font-size:11px;color:#666;font-style:italic">Felt strong on bench today...</div>
+          </div>
+
+          <!-- Collapsed optionals -->
+          <div style="border:1px dashed #1f1f1f;border-radius:10px;padding:9px 12px;display:flex;align-items:center;justify-content:center;gap:6px">
+            <span style="font-size:12px;color:#333">+</span>
+            <span style="font-size:11px;color:#444">Sleep & mood (optional)</span>
+          </div>
+
+          <!-- Save button -->
+          <div style="background:#34d399;border-radius:12px;padding:12px;text-align:center;margin-top:2px">
+            <span style="font-size:13px;font-weight:700;color:#0a0a0a">Save Entry</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: Sectioned with macro confirm step shown -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="flex:1;cursor:pointer">
+    <div class="card-body">
+      <h3>B — Two-step: screenshot confirm then form</h3>
+      <p style="color:var(--subtle);font-size:0.82rem">After AI extraction, a dedicated confirm screen shows extracted values before the full form. Clearer separation of the AI step.</p>
+    </div>
+    <div class="card-image" style="padding:0 14px 16px">
+      <!-- Show the AI confirm screen -->
+      <div style="background:#0a0a0a;border-radius:20px;border:1.5px solid #1f1f1f;overflow:hidden;max-width:260px;margin:0 auto;font-family:system-ui,sans-serif">
+
+        <div style="padding:14px 16px 10px;border-bottom:1px solid #161616">
+          <div style="font-size:11px;color:#34d399;letter-spacing:0.05em;text-transform:uppercase;font-weight:600">Step 2 of 2 · AI Extracted</div>
+          <div style="font-size:16px;font-weight:700;color:#f0f0f0">Confirm Macros</div>
+        </div>
+
+        <div style="padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+
+          <!-- Extracted image thumbnail -->
+          <div style="background:#141414;border-radius:10px;border:1px solid #1f1f1f;height:52px;display:flex;align-items:center;gap:10px;padding:0 12px">
+            <div style="width:36px;height:36px;background:#1f1f1f;border-radius:6px;flex-shrink:0"></div>
+            <div>
+              <div style="font-size:10px;color:#a0a0a0;font-weight:500">MFP screenshot</div>
+              <div style="font-size:9px;color:#34d399;margin-top:1px">Extracted · review below</div>
+            </div>
+          </div>
+
+          <!-- Extracted values - editable feel -->
+          <div style="background:#141414;border:1px solid #34d39930;border-radius:12px;padding:12px">
+            <div style="font-size:9px;color:#34d399;font-weight:600;letter-spacing:0.06em;margin-bottom:10px">EXTRACTED VALUES · tap to edit</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+              <div style="background:#0f1f17;border:1px solid #34d39940;border-radius:8px;padding:8px;text-align:center">
+                <div style="font-size:18px;font-weight:700;color:#f0f0f0">2,210</div>
+                <div style="font-size:8px;color:#525252">kcal</div>
+              </div>
+              <div style="background:#0f1f17;border:1px solid #34d39940;border-radius:8px;padding:8px;text-align:center">
+                <div style="font-size:18px;font-weight:700;color:#34d399">172g</div>
+                <div style="font-size:8px;color:#525252">protein</div>
+              </div>
+              <div style="background:#0f1f17;border:1px solid #34d39940;border-radius:8px;padding:8px;text-align:center">
+                <div style="font-size:18px;font-weight:700;color:#f0f0f0">68g</div>
+                <div style="font-size:8px;color:#525252">fat</div>
+              </div>
+              <div style="background:#0f1f17;border:1px solid #34d39940;border-radius:8px;padding:8px;text-align:center">
+                <div style="font-size:18px;font-weight:700;color:#f0f0f0">248g</div>
+                <div style="font-size:8px;color:#525252">carbs</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Confirm / edit actions -->
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:8px">
+            <div style="background:#141414;border:1px solid #1f1f1f;border-radius:10px;padding:10px;text-align:center">
+              <span style="font-size:11px;color:#666">Edit</span>
+            </div>
+            <div style="background:#34d399;border-radius:10px;padding:10px;text-align:center">
+              <span style="font-size:12px;font-weight:700;color:#0a0a0a">Confirm & continue</span>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid #161616;padding-top:10px">
+            <div style="font-size:9px;color:#333;text-align:center">These values will pre-fill the log form on the next screen</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:18px;padding:12px 16px;background:#0d0d0d;border-radius:10px;border:1px solid #1a1a1a">
+  <p style="color:#666;font-size:0.82rem;margin:0"><strong style="color:#888">Note:</strong> These aren't mutually exclusive — Option A is the normal log form, Option B shows the AI confirmation step that appears <em>before</em> the form when a screenshot is uploaded. In the final app, both exist: upload triggers the confirm step (B), which then pre-fills the form (A). The question is really just how prominent to make the AI extraction CTA on the main form.</p>
+</div>

@@ -1,0 +1,25 @@
+/* app/globals.css */
+@import "tailwindcss";
+
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --border: #1f1f1f;
+  --accent: #34d399;
+  --text-primary: #f0f0f0;
+  --text-secondary: #a0a0a0;
+  --text-muted: #525252;
+  --amber: #fbbf24;
+  --sky: #60a5fa;
+  --red: #f87171;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+* {
+  font-variant-numeric: tabular-nums;
+}

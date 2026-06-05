@@ -1,0 +1,118 @@
+<h2>Design Direction — Colour & Typography</h2>
+<p class="subtitle">Three palette variants, all dark-first with a green accent. Same card component rendered in each so you can compare feel.</p>
+
+<div class="section" style="margin-top:24px">
+
+  <!-- Palette cards -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+
+    <!-- A: Cool / Clinical -->
+    <div class="card" data-choice="a" onclick="toggleSelect(this)" style="cursor:pointer">
+      <div class="card-body" style="padding-bottom:8px">
+        <h3 style="margin-bottom:2px">A — Vivid Lime</h3>
+        <p style="color:var(--subtle);font-size:0.8rem">Bright, high-energy. The green pops hard against cool-black. Feels fast, modern.</p>
+      </div>
+      <!-- Swatch row -->
+      <div style="display:flex;gap:6px;padding:0 16px 12px">
+        <div style="flex:1;height:28px;border-radius:6px;background:#09090b;border:1px solid #27272a" title="#09090b"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#141417" title="#141417"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#1c1c1f" title="#1c1c1f"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#4ade80" title="#4ade80 — accent"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#f4f4f5" title="#f4f4f5 — text"></div>
+      </div>
+      <!-- Sample card -->
+      <div style="margin:0 12px 16px;background:#141417;border-radius:14px;border:1px solid #1c1c1f;padding:14px;font-family:system-ui,sans-serif">
+        <div style="font-size:9px;color:#52525b;font-weight:600;letter-spacing:0.06em;margin-bottom:8px">PROTEIN — TODAY</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <span style="font-size:28px;font-weight:800;color:#f4f4f5;letter-spacing:-0.02em">172<span style="font-size:13px;color:#52525b;font-weight:400"> g</span></span>
+          <span style="font-size:12px;color:#52525b">/ 185 g</span>
+        </div>
+        <div style="background:#27272a;border-radius:6px;height:7px;overflow:hidden">
+          <div style="width:93%;height:100%;background:#4ade80;border-radius:6px"></div>
+        </div>
+        <div style="font-size:10px;color:#4ade80;margin-top:6px;font-weight:600">93% — great</div>
+      </div>
+    </div>
+
+    <!-- B: Emerald / Premium (recommended) -->
+    <div class="card" data-choice="b" onclick="toggleSelect(this)" style="cursor:pointer;outline:2px solid #34d399;outline-offset:2px">
+      <div class="card-body" style="padding-bottom:8px">
+        <h3 style="margin-bottom:2px">B — Emerald <span style="font-size:11px;color:#34d399;font-weight:500">(recommended)</span></h3>
+        <p style="color:var(--subtle);font-size:0.8rem">Slightly softer green, warmer blacks. Feels premium and calm — like a high-end health app.</p>
+      </div>
+      <div style="display:flex;gap:6px;padding:0 16px 12px">
+        <div style="flex:1;height:28px;border-radius:6px;background:#0a0a0a;border:1px solid #1f1f1f" title="#0a0a0a"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#141414" title="#141414"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#1f1f1f" title="#1f1f1f"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#34d399" title="#34d399 — accent"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#f0f0f0" title="#f0f0f0 — text"></div>
+      </div>
+      <div style="margin:0 12px 16px;background:#141414;border-radius:14px;border:1px solid #1f1f1f;padding:14px;font-family:system-ui,sans-serif">
+        <div style="font-size:9px;color:#525252;font-weight:600;letter-spacing:0.06em;margin-bottom:8px">PROTEIN — TODAY</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <span style="font-size:28px;font-weight:800;color:#f0f0f0;letter-spacing:-0.02em">172<span style="font-size:13px;color:#525252;font-weight:400"> g</span></span>
+          <span style="font-size:12px;color:#525252">/ 185 g</span>
+        </div>
+        <div style="background:#1f1f1f;border-radius:6px;height:7px;overflow:hidden">
+          <div style="width:93%;height:100%;background:#34d399;border-radius:6px"></div>
+        </div>
+        <div style="font-size:10px;color:#34d399;margin-top:6px;font-weight:600">93% — great</div>
+      </div>
+    </div>
+
+    <!-- C: Neon / High contrast -->
+    <div class="card" data-choice="c" onclick="toggleSelect(this)" style="cursor:pointer">
+      <div class="card-body" style="padding-bottom:8px">
+        <h3 style="margin-bottom:2px">C — Neon Green</h3>
+        <p style="color:var(--subtle);font-size:0.8rem">Pure black base, electric green. High drama. Can feel intense at 6am on a bright screen.</p>
+      </div>
+      <div style="display:flex;gap:6px;padding:0 16px 12px">
+        <div style="flex:1;height:28px;border-radius:6px;background:#000000;border:1px solid #1a1a1a" title="#000"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#111111" title="#111"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#1a1a1a" title="#1a1a1a"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#22c55e" title="#22c55e — accent"></div>
+        <div style="flex:1;height:28px;border-radius:6px;background:#ffffff" title="#fff — text"></div>
+      </div>
+      <div style="margin:0 12px 16px;background:#111111;border-radius:14px;border:1px solid #1a1a1a;padding:14px;font-family:system-ui,sans-serif">
+        <div style="font-size:9px;color:#555555;font-weight:600;letter-spacing:0.06em;margin-bottom:8px">PROTEIN — TODAY</div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+          <span style="font-size:28px;font-weight:800;color:#ffffff;letter-spacing:-0.02em">172<span style="font-size:13px;color:#555555;font-weight:400"> g</span></span>
+          <span style="font-size:12px;color:#555555">/ 185 g</span>
+        </div>
+        <div style="background:#1a1a1a;border-radius:6px;height:7px;overflow:hidden">
+          <div style="width:93%;height:100%;background:#22c55e;border-radius:6px"></div>
+        </div>
+        <div style="font-size:10px;color:#22c55e;margin-top:6px;font-weight:600">93% — great</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Typography section -->
+<div class="section" style="margin-top:32px;background:#111;border-radius:14px;border:1px solid #1e1e1e;padding:20px">
+  <h3 style="margin-bottom:4px">Typography (same across all palettes)</h3>
+  <p style="color:var(--subtle);font-size:0.82rem;margin-bottom:20px">Inter for UI text — clean, legible on mobile. Numbers use tabular figures so charts align.</p>
+  <div style="display:flex;flex-direction:column;gap:12px;font-family:system-ui,sans-serif">
+    <div style="display:flex;align-items:baseline;gap:16px">
+      <span style="font-size:36px;font-weight:800;color:#f0f0f0;letter-spacing:-0.03em;min-width:80px">86.1</span>
+      <span style="font-size:11px;color:#555">Hero numbers — 36px / 800 weight / tight tracking. Used for today's weight, key metrics.</span>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:16px">
+      <span style="font-size:22px;font-weight:700;color:#f0f0f0;letter-spacing:-0.02em;min-width:80px">2,400</span>
+      <span style="font-size:11px;color:#555">Card headline — 22px / 700 weight. Chart Y-axis values, card totals.</span>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:16px">
+      <span style="font-size:15px;font-weight:500;color:#a0a0a0;min-width:80px">/ 185 g</span>
+      <span style="font-size:11px;color:#555">Secondary value — 15px / 500 / muted. Target comparisons.</span>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:16px">
+      <span style="font-size:10px;font-weight:600;color:#555;letter-spacing:0.07em;text-transform:uppercase;min-width:80px">PROTEIN</span>
+      <span style="font-size:11px;color:#555">Label — 10px / 600 / all-caps / wide tracking. Card section headers.</span>
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:16px;padding:12px 16px;background:#0d0d0d;border-radius:10px;border:1px solid #1a1a1a">
+  <p style="color:#666;font-size:0.8rem;margin:0"><strong style="color:#888">Accent colour is used sparingly:</strong> progress bars, the rolling-average line, success states, and active tab indicator. Everything else is near-black surfaces and white/grey text. Secondary metric colours: amber for calories, sky-blue for steps — subtle, not competing with the green.</p>
+</div>

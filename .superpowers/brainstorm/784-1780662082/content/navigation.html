@@ -1,0 +1,124 @@
+<h2>Navigation & App Shell</h2>
+<p class="subtitle">Mobile-first layout — bottom tab bar on phone, sidebar on desktop. Which tab label set feels right?</p>
+
+<div class="split" style="gap:32px;align-items:flex-start;margin-top:24px">
+
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="flex:1;cursor:pointer">
+    <div class="card-body">
+      <h3>A — Icon + Label (recommended)</h3>
+      <p style="color:var(--subtle);font-size:0.85rem;margin-bottom:16px">Clear, standard. Works well on 5 tabs.</p>
+    </div>
+    <div class="card-image" style="padding:0 16px 16px">
+      <!-- Phone mockup -->
+      <div style="background:#0d0d0d;border-radius:24px;border:1.5px solid #2a2a2a;overflow:hidden;max-width:280px;margin:0 auto;box-shadow:0 8px 32px rgba(0,0,0,0.5)">
+        <!-- Status bar -->
+        <div style="display:flex;justify-content:space-between;padding:10px 20px 4px;font-size:11px;color:#888">
+          <span>9:41</span><span>●●●</span>
+        </div>
+        <!-- Header -->
+        <div style="padding:12px 20px 8px;border-bottom:1px solid #1e1e1e">
+          <span style="font-size:16px;font-weight:700;color:#f0f0f0">Dashboard</span>
+        </div>
+        <!-- Page content placeholder -->
+        <div style="padding:16px 20px;min-height:280px">
+          <div style="background:#1a1a1a;border-radius:12px;height:80px;margin-bottom:12px;display:flex;align-items:center;justify-content:center">
+            <span style="color:#4ade80;font-size:11px;font-weight:600;letter-spacing:0.05em">WEIGHT TREND</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="background:#1a1a1a;border-radius:10px;height:60px;display:flex;align-items:center;justify-content:center">
+              <span style="color:#888;font-size:10px">PROTEIN</span>
+            </div>
+            <div style="background:#1a1a1a;border-radius:10px;height:60px;display:flex;align-items:center;justify-content:center">
+              <span style="color:#888;font-size:10px">STEPS</span>
+            </div>
+          </div>
+          <div style="background:#1a1a1a;border-radius:10px;height:50px;margin-top:10px;display:flex;align-items:center;justify-content:center">
+            <span style="color:#888;font-size:10px">CALORIES</span>
+          </div>
+        </div>
+        <!-- Bottom nav -->
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid #1e1e1e;background:#0d0d0d;padding:8px 0 12px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">📊</span>
+            <span style="font-size:9px;color:#4ade80;font-weight:600">Dashboard</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">✏️</span>
+            <span style="font-size:9px;color:#555">Log</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">📷</span>
+            <span style="font-size:9px;color:#555">Photos</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">🤖</span>
+            <span style="font-size:9px;color:#555">Coach</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">⚙️</span>
+            <span style="font-size:9px;color:#555">Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="flex:1;cursor:pointer">
+    <div class="card-body">
+      <h3>B — Consolidated (4 tabs)</h3>
+      <p style="color:var(--subtle);font-size:0.85rem;margin-bottom:16px">Merge Check-in into Dashboard. Slightly less cluttered.</p>
+    </div>
+    <div class="card-image" style="padding:0 16px 16px">
+      <div style="background:#0d0d0d;border-radius:24px;border:1.5px solid #2a2a2a;overflow:hidden;max-width:280px;margin:0 auto;box-shadow:0 8px 32px rgba(0,0,0,0.5)">
+        <div style="display:flex;justify-content:space-between;padding:10px 20px 4px;font-size:11px;color:#888">
+          <span>9:41</span><span>●●●</span>
+        </div>
+        <div style="padding:12px 20px 8px;border-bottom:1px solid #1e1e1e">
+          <span style="font-size:16px;font-weight:700;color:#f0f0f0">Dashboard</span>
+        </div>
+        <div style="padding:16px 20px;min-height:280px">
+          <div style="background:#1a1a1a;border-radius:12px;height:80px;margin-bottom:12px;display:flex;align-items:center;justify-content:center">
+            <span style="color:#4ade80;font-size:11px;font-weight:600;letter-spacing:0.05em">WEIGHT TREND</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="background:#1a1a1a;border-radius:10px;height:60px;display:flex;align-items:center;justify-content:center">
+              <span style="color:#888;font-size:10px">PROTEIN</span>
+            </div>
+            <div style="background:#1a1a1a;border-radius:10px;height:60px;display:flex;align-items:center;justify-content:center">
+              <span style="color:#888;font-size:10px">STEPS</span>
+            </div>
+          </div>
+          <div style="background:#1a1a1a;border-radius:10px;height:50px;margin-top:10px;display:flex;align-items:center;justify-content:center">
+            <span style="color:#888;font-size:10px">+ AI CHECK-IN BUTTON</span>
+          </div>
+        </div>
+        <!-- 4-tab bottom nav -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #1e1e1e;background:#0d0d0d;padding:8px 0 12px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">📊</span>
+            <span style="font-size:9px;color:#4ade80;font-weight:600">Dashboard</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">✏️</span>
+            <span style="font-size:9px;color:#555">Log</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">📷</span>
+            <span style="font-size:9px;color:#555">Photos</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">⚙️</span>
+            <span style="font-size:9px;color:#555">Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:24px;padding:16px;background:#111;border-radius:12px;border:1px solid #222">
+  <p style="color:#888;font-size:0.85rem;margin:0"><strong style="color:#aaa">On desktop (≥768px):</strong> both options show a fixed left sidebar instead of the bottom bar. The sidebar has the same items, stacked vertically with icons + labels. The rest of the screen is the main content area.</p>
+</div>

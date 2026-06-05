@@ -1,0 +1,232 @@
+<h2>Dashboard Layout</h2>
+<p class="subtitle">Two approaches to organising the dashboard on mobile. The weight trend is the hero in both.</p>
+
+<div class="split" style="gap:28px;align-items:flex-start;margin-top:24px">
+
+  <!-- Option A: Stacked cards, full-width chart -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="flex:1;cursor:pointer">
+    <div class="card-body">
+      <h3>A — Stacked cards (recommended)</h3>
+      <p style="color:var(--subtle);font-size:0.82rem;margin-bottom:12px">Full-width chart on top. Macro/step summary cards below. One column — easy to scan while scrolling.</p>
+    </div>
+    <div class="card-image" style="padding:0 16px 16px">
+      <div style="background:#0d0d0d;border-radius:20px;border:1.5px solid #2a2a2a;overflow:hidden;max-width:260px;margin:0 auto;font-family:system-ui,sans-serif">
+        <!-- Header -->
+        <div style="padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:11px;color:#555;letter-spacing:0.06em;text-transform:uppercase">Thursday, 5 Jun</div>
+            <div style="font-size:16px;font-weight:700;color:#f0f0f0">Dashboard</div>
+          </div>
+          <div style="background:#4ade8018;border:1px solid #4ade8040;border-radius:8px;padding:4px 10px;font-size:11px;color:#4ade80;font-weight:600">7-day avg: 86.1 kg</div>
+        </div>
+
+        <!-- Weight chart card -->
+        <div style="margin:0 12px 10px;background:#141414;border-radius:14px;border:1px solid #1e1e1e;padding:12px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <span style="font-size:11px;color:#555;font-weight:600;letter-spacing:0.05em">WEIGHT TREND</span>
+            <span style="font-size:10px;color:#555">30 days</span>
+          </div>
+          <!-- Fake chart area -->
+          <div style="height:72px;position:relative;display:flex;align-items:flex-end;gap:3px;padding:0 2px">
+            <!-- Fake bar chart with trend line feel -->
+            <svg width="100%" height="72" viewBox="0 0 220 72" style="position:absolute;top:0;left:0">
+              <!-- Grid lines -->
+              <line x1="0" y1="18" x2="220" y2="18" stroke="#222" stroke-width="0.5"/>
+              <line x1="0" y1="36" x2="220" y2="36" stroke="#222" stroke-width="0.5"/>
+              <line x1="0" y1="54" x2="220" y2="54" stroke="#222" stroke-width="0.5"/>
+              <!-- Daily weight dots (noisy) -->
+              <polyline points="5,38 16,42 27,30 38,48 49,36 60,52 71,40 82,34 93,46 104,38 115,44 126,32 137,40 148,34 159,28 170,36 181,30 192,24 203,28 214,22" fill="none" stroke="#333" stroke-width="1"/>
+              <!-- Rolling avg (smooth green line) -->
+              <polyline points="5,40 16,40 27,38 38,38 49,38 60,40 71,39 82,38 93,38 104,37 115,37 126,36 137,36 148,35 159,34 170,33 181,32 192,31 203,30 214,29" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Y labels -->
+              <text x="216" y="21" fill="#444" font-size="8">87</text>
+              <text x="216" y="39" fill="#444" font-size="8">86</text>
+              <text x="216" y="57" fill="#444" font-size="8">85</text>
+            </svg>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:6px">
+            <div style="display:flex;align-items:center;gap:4px"><div style="width:16px;height:2px;background:#4ade80;border-radius:2px"></div><span style="font-size:9px;color:#555">7-day avg</span></div>
+            <div style="display:flex;align-items:center;gap:4px"><div style="width:16px;height:1px;background:#333"></div><span style="font-size:9px;color:#555">daily</span></div>
+          </div>
+        </div>
+
+        <!-- Protein hero card -->
+        <div style="margin:0 12px 10px;background:#141414;border-radius:14px;border:1px solid #1e1e1e;padding:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span style="font-size:11px;color:#555;font-weight:600;letter-spacing:0.05em">PROTEIN — TODAY</span>
+            <span style="font-size:14px;font-weight:700;color:#f0f0f0">172 <span style="color:#555;font-weight:400;font-size:10px">/ 185 g</span></span>
+          </div>
+          <div style="background:#1e1e1e;border-radius:6px;height:7px;overflow:hidden">
+            <div style="width:93%;height:100%;background:#4ade80;border-radius:6px"></div>
+          </div>
+          <div style="font-size:10px;color:#4ade80;margin-top:5px;text-align:right">93% — great</div>
+        </div>
+
+        <!-- 2-col: Calories + Steps -->
+        <div style="margin:0 12px 10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:#141414;border-radius:12px;border:1px solid #1e1e1e;padding:10px">
+            <div style="font-size:9px;color:#555;font-weight:600;letter-spacing:0.05em;margin-bottom:4px">CALORIES</div>
+            <div style="font-size:16px;font-weight:700;color:#f0f0f0">2,210</div>
+            <div style="font-size:9px;color:#555">/ 2,400</div>
+            <div style="background:#1e1e1e;border-radius:4px;height:4px;margin-top:6px;overflow:hidden">
+              <div style="width:92%;height:100%;background:#facc15;border-radius:4px"></div>
+            </div>
+          </div>
+          <div style="background:#141414;border-radius:12px;border:1px solid #1e1e1e;padding:10px">
+            <div style="font-size:9px;color:#555;font-weight:600;letter-spacing:0.05em;margin-bottom:4px">STEPS</div>
+            <div style="font-size:16px;font-weight:700;color:#f0f0f0">8,430</div>
+            <div style="font-size:9px;color:#555">/ 10,000</div>
+            <div style="background:#1e1e1e;border-radius:4px;height:4px;margin-top:6px;overflow:hidden">
+              <div style="width:84%;height:100%;background:#60a5fa;border-radius:4px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streak row -->
+        <div style="margin:0 12px 14px;background:#141414;border-radius:12px;border:1px solid #1e1e1e;padding:10px;display:flex;justify-content:space-around">
+          <div style="text-align:center">
+            <div style="font-size:16px;font-weight:700;color:#f0f0f0">11</div>
+            <div style="font-size:9px;color:#555">day streak</div>
+          </div>
+          <div style="width:1px;background:#1e1e1e"></div>
+          <div style="text-align:center">
+            <div style="font-size:16px;font-weight:700;color:#4ade80">6/7</div>
+            <div style="font-size:9px;color:#555">logged this week</div>
+          </div>
+          <div style="width:1px;background:#1e1e1e"></div>
+          <div style="text-align:center">
+            <div style="font-size:16px;font-weight:700;color:#f0f0f0">−0.4</div>
+            <div style="font-size:9px;color:#555">kg this week</div>
+          </div>
+        </div>
+
+        <!-- Bottom nav placeholder -->
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid #1a1a1a;background:#0a0a0a;padding:8px 0 10px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#4ade80;border-radius:4px"></div>
+            <span style="font-size:8px;color:#4ade80">Dashboard</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#333;border-radius:4px"></div>
+            <span style="font-size:8px;color:#444">Log</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#333;border-radius:4px"></div>
+            <span style="font-size:8px;color:#444">Photos</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#333;border-radius:4px"></div>
+            <span style="font-size:8px;color:#444">Coach</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#333;border-radius:4px"></div>
+            <span style="font-size:8px;color:#444">Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: Summary row at top, chart below -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="flex:1;cursor:pointer">
+    <div class="card-body">
+      <h3>B — Stats first, chart below</h3>
+      <p style="color:var(--subtle);font-size:0.82rem;margin-bottom:12px">Today's numbers at the top as a quick-glance row. Chart below for trend context. Good if you care more about today than the trend.</p>
+    </div>
+    <div class="card-image" style="padding:0 16px 16px">
+      <div style="background:#0d0d0d;border-radius:20px;border:1.5px solid #2a2a2a;overflow:hidden;max-width:260px;margin:0 auto;font-family:system-ui,sans-serif">
+        <div style="padding:14px 16px 10px">
+          <div style="font-size:11px;color:#555;letter-spacing:0.06em;text-transform:uppercase">Thursday, 5 Jun</div>
+          <div style="font-size:16px;font-weight:700;color:#f0f0f0">Dashboard</div>
+        </div>
+
+        <!-- Today's stat strip -->
+        <div style="margin:0 12px 10px;background:#141414;border-radius:14px;border:1px solid #1e1e1e;padding:10px">
+          <div style="font-size:9px;color:#555;font-weight:600;letter-spacing:0.05em;margin-bottom:10px">TODAY</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;text-align:center">
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#f0f0f0">86.1</div>
+              <div style="font-size:8px;color:#555">kg</div>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#4ade80">172g</div>
+              <div style="font-size:8px;color:#555">protein</div>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#facc15">2210</div>
+              <div style="font-size:8px;color:#555">kcal</div>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#60a5fa">8.4k</div>
+              <div style="font-size:8px;color:#555">steps</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weight chart below -->
+        <div style="margin:0 12px 10px;background:#141414;border-radius:14px;border:1px solid #1e1e1e;padding:12px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <span style="font-size:11px;color:#555;font-weight:600;letter-spacing:0.05em">WEIGHT TREND</span>
+          </div>
+          <div style="height:72px;position:relative">
+            <svg width="100%" height="72" viewBox="0 0 220 72">
+              <line x1="0" y1="18" x2="220" y2="18" stroke="#222" stroke-width="0.5"/>
+              <line x1="0" y1="36" x2="220" y2="36" stroke="#222" stroke-width="0.5"/>
+              <line x1="0" y1="54" x2="220" y2="54" stroke="#222" stroke-width="0.5"/>
+              <polyline points="5,38 16,42 27,30 38,48 49,36 60,52 71,40 82,34 93,46 104,38 115,44 126,32 137,40 148,34 159,28 170,36 181,30 192,24 203,28 214,22" fill="none" stroke="#333" stroke-width="1"/>
+              <polyline points="5,40 16,40 27,38 38,38 49,38 60,40 71,39 82,38 93,38 104,37 115,37 126,36 137,36 148,35 159,34 170,33 181,32 192,31 203,30 214,29" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Protein bar -->
+        <div style="margin:0 12px 10px;background:#141414;border-radius:12px;border:1px solid #1e1e1e;padding:10px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:9px;color:#555;font-weight:600;letter-spacing:0.05em">PROTEIN</span>
+            <span style="font-size:11px;color:#4ade80;font-weight:600">172 / 185 g</span>
+          </div>
+          <div style="background:#1e1e1e;border-radius:4px;height:6px">
+            <div style="width:93%;height:100%;background:#4ade80;border-radius:4px"></div>
+          </div>
+        </div>
+
+        <!-- Streak -->
+        <div style="margin:0 12px 14px;background:#141414;border-radius:12px;border:1px solid #1e1e1e;padding:10px;display:flex;justify-content:space-around">
+          <div style="text-align:center"><div style="font-size:14px;font-weight:700;color:#f0f0f0">11</div><div style="font-size:8px;color:#555">streak</div></div>
+          <div style="width:1px;background:#1e1e1e"></div>
+          <div style="text-align:center"><div style="font-size:14px;font-weight:700;color:#4ade80">6/7</div><div style="font-size:8px;color:#555">logged</div></div>
+          <div style="width:1px;background:#1e1e1e"></div>
+          <div style="text-align:center"><div style="font-size:14px;font-weight:700;color:#f0f0f0">−0.4</div><div style="font-size:8px;color:#555">kg / wk</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid #1a1a1a;background:#0a0a0a;padding:8px 0 10px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#4ade80;border-radius:4px"></div>
+            <span style="font-size:8px;color:#4ade80">Dashboard</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#333;border-radius:4px"></div>
+            <span style="font-size:8px;color:#444">Log</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#333;border-radius:4px"></div>
+            <span style="font-size:8px;color:#444">Photos</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#333;border-radius:4px"></div>
+            <span style="font-size:8px;color:#444">Coach</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <div style="width:18px;height:18px;background:#333;border-radius:4px"></div>
+            <span style="font-size:8px;color:#444">Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:20px;padding:14px 16px;background:#111;border-radius:12px;border:1px solid #1e1e1e">
+  <p style="color:#888;font-size:0.82rem;margin:0"><strong style="color:#aaa">Note:</strong> The green line is the 7-day rolling average. The faint grey line is daily weight. In the real app the chart will be interactive (tap a point to see that day's entry). Colours shown here are the proposed palette — green accent, yellow for calories, blue for steps.</p>
+</div>

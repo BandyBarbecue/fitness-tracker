@@ -51,7 +51,6 @@ export function CheckinUI() {
     }
 
     setStreaming(false)
-    setLiveText('')
     refetch()
   }
 
@@ -69,7 +68,7 @@ export function CheckinUI() {
         {streaming ? 'Analysing your data…' : 'Run weekly check-in (last 14 days)'}
       </button>
 
-      {streaming && liveText && (
+      {liveText && (
         <div className="rounded-2xl p-4 text-sm leading-relaxed whitespace-pre-wrap"
           style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
           {liveText}

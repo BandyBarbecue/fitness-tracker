@@ -4,6 +4,8 @@ import { SessionPicker, type SessionType } from './session-picker'
 import { useDailyLog, useUpsertLog } from '@/lib/queries/daily-logs'
 import { createClient } from '@/lib/supabase/client'
 import { ScreenshotUploader } from './screenshot-uploader'
+import { MacroConfirm } from './macro-confirm'
+import type { ExtractedMacros } from '@/lib/anthropic/extract-macros'
 
 interface Props { date: string }
 
@@ -12,6 +14,9 @@ export function LogForm({ date }: Props) {
   const upsert = useUpsertLog()
   const [showOptional, setShowOptional] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
+  const [pendingScreenshot, setPendingScreenshot] = useState<{ screenshotId: string; imagePath: string } | null>(null)
+  const [extracting, setExtracting] = useState(false)
+  const [extracted, setExtracted] = useState<ExtractedMacros | null>(null)
 
   const [fields, setFields] = useState({
     weight_kg: '', calories: '', protein_g: '', fat_g: '', carbs_g: '',
@@ -61,6 +66,12 @@ export function LogForm({ date }: Props) {
         mood:         fields.mood         ? parseInt(fields.mood)            : null,
         note:         fields.note || null,
       })
+      if (pendingScreenshot) {
+        const supabase = createClient()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (supabase.from('food_screenshots') as any).update({ confirmed: true }).eq('id', pendingScreenshot.screenshotId)
+        setPendingScreenshot(null)
+      }
       setToast('Saved')
       setTimeout(() => setToast(null), 2000)
     } catch {
@@ -97,6 +108,27 @@ export function LogForm({ date }: Props) {
     )
   }
 
+  if (extracting) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Reading screenshot…</p>
+      </div>
+    )
+  }
+
+  if (extracted) {
+    return (
+      <MacroConfirm
+        extracted={extracted}
+        onConfirm={(values) => {
+          setFields(f => ({ ...f, ...values }))
+          setExtracted(null)
+        }}
+        onSkip={() => setExtracted(null)}
+      />
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-8 pt-6 max-w-lg mx-auto">
       <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{date}</h1>
@@ -104,9 +136,18 @@ export function LogForm({ date }: Props) {
       <ScreenshotUploader
         dailyLogId={existing?.id ?? null}
         date={date}
-        onUploaded={({ screenshotId, imagePath }) => {
-          // Will trigger AI extraction in Task 10
-          console.log('Uploaded', screenshotId, imagePath)
+        onUploaded={async ({ screenshotId, imagePath }) => {
+          setExtracting(true)
+          setPendingScreenshot({ screenshotId, imagePath })
+          const res = await fetch('/api/ai/extract-macros', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ screenshotId, imagePath }),
+          })
+          const data = await res.json()
+          setExtracting(false)
+          if (res.ok) setExtracted(data)
+          else setToast('Could not read screenshot — enter manually')
         }}
       />
 

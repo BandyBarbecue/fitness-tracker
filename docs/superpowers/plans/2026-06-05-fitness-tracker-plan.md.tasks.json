@@ -17,7 +17,7 @@
     {
       "id": 2,
       "subject": "Task 2: Auth & Supabase Clients",
-      "status": "pending",
+      "status": "completed",
       "blockedBy": [1],
       "description": "**Goal:** Wire up Supabase email+password auth — login page, session middleware, and reusable server/browser client factories.\n\n**Files:**\n- Create: `lib/supabase/client.ts`\n- Create: `lib/supabase/server.ts`\n- Create: `middleware.ts`\n- Create: `app/(auth)/login/page.tsx`\n- Create: `components/providers.tsx`\n- Modify: `app/layout.tsx`\n\n**Acceptance Criteria:**\n- [ ] Visiting `/dashboard` while logged out redirects to `/login`\n- [ ] Submitting correct credentials redirects to `/dashboard`\n- [ ] Visiting `/login` while logged in redirects to `/dashboard`\n- [ ] `npm run build` passes\n\n**Verify:** Manual — open `http://localhost:3000`, confirm redirect to `/login`. Log in, confirm redirect to `/dashboard`.\n\n```json:metadata\n{\"files\": [\"lib/supabase/client.ts\", \"lib/supabase/server.ts\", \"middleware.ts\", \"app/(auth)/login/page.tsx\", \"components/providers.tsx\", \"app/layout.tsx\"], \"verifyCommand\": \"npm run build\", \"acceptanceCriteria\": [\"Unauthenticated visit to /dashboard redirects to /login\", \"Login with correct credentials redirects to /dashboard\", \"Authenticated visit to /login redirects to /dashboard\"]}\n```"
     },

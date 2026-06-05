@@ -1,7 +1,8 @@
+import type { ReactNode } from 'react'
 import { BottomNav } from '@/components/nav/bottom-nav'
 import { Sidebar } from '@/components/nav/sidebar'
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen md:pl-56">
       <Sidebar />

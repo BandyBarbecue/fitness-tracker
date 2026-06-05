@@ -11,10 +11,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.107.0",
     "@tanstack/react-query": "^5.101.0",
-    "anthropic": "^0.0.0",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.17.0",
     "next": "16.2.7",

@@ -1,7 +1,7 @@
 interface Targets {
   calories: number; protein_g: number; fat_g: number; carbs_g: number
   steps: number; goal_rate_kg_per_week: number
-  bodyweight_kg: number; height_cm: number; training_split: string
+  bodyweight_kg: number; height_cm: number; training_split: string | null
 }
 
 interface LogRow {
@@ -12,17 +12,24 @@ interface LogRow {
 }
 
 export function buildCheckinPrompt(targets: Targets, logs: LogRow[]): string {
-  const proteinHits = logs.filter(l => l.protein_g != null && l.protein_g >= targets.protein_g).length
-  const proteinHitRate = logs.length > 0 ? Math.round((proteinHits / logs.length) * 100) : 0
+  const proteinLogged = logs.filter(l => l.protein_g != null)
+  const proteinHits = proteinLogged.filter(l => l.protein_g! >= targets.protein_g).length
+  const proteinHitRate = proteinLogged.length > 0
+    ? Math.round((proteinHits / proteinLogged.length) * 100)
+    : 0
 
   const weightLogs = logs.filter(l => l.weight_kg != null).map(l => l.weight_kg!)
-  const recentAvg = weightLogs.length > 0
-    ? weightLogs.slice(0, Math.min(7, weightLogs.length)).reduce((a, b) => a + b, 0) / Math.min(7, weightLogs.length)
+  const sortedWeights = [...weightLogs].reverse() // newest first
+  const recentSlice = sortedWeights.slice(0, Math.min(7, sortedWeights.length))
+  const olderSlice = sortedWeights.slice(7)
+  const recentAvg = recentSlice.length > 0
+    ? recentSlice.reduce((a, b) => a + b, 0) / recentSlice.length
     : targets.bodyweight_kg
-  const olderWeights = weightLogs.slice(7)
-  const olderAvg = olderWeights.length > 0
-    ? olderWeights.reduce((a, b) => a + b, 0) / olderWeights.length
-    : recentAvg
+  const olderAvg = olderSlice.length > 0
+    ? olderSlice.reduce((a, b) => a + b, 0) / olderSlice.length
+    : recentSlice.length > 1
+      ? recentSlice[recentSlice.length - 1] // oldest in window (index is highest = oldest because newest-first)
+      : recentAvg
   const weeklyDelta = Math.round((recentAvg - olderAvg) * 100) / 100
   const trendDir = weeklyDelta < 0 ? 'down' : weeklyDelta > 0 ? 'up' : 'flat'
 
@@ -36,7 +43,7 @@ export function buildCheckinPrompt(targets: Targets, logs: LogRow[]): string {
 
   return `You are a personal fitness coach. Your client's current profile:
 - Height: ${targets.height_cm}cm, Weight goal base: ${targets.bodyweight_kg}kg
-- Programme: ${targets.training_split}
+- Programme: ${targets.training_split ?? 'Not set'}
 - Daily targets: ${targets.calories} kcal, ${targets.protein_g}g protein, ${targets.fat_g}g fat, ${targets.carbs_g}g carbs, ${targets.steps} steps
 - Fat-loss goal: ${targets.goal_rate_kg_per_week} kg/week
 

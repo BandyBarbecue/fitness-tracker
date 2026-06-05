@@ -18,7 +18,7 @@ describe('buildCheckinPrompt', () => {
   it('includes height and weight from targets', () => {
     const prompt = buildCheckinPrompt(targets, logs)
     expect(prompt).toContain('188cm')
-    expect(prompt).toContain('86')
+    expect(prompt).toContain('86kg')
   })
 
   it('includes training split', () => {
@@ -42,5 +42,17 @@ describe('buildCheckinPrompt', () => {
   it('includes goal rate in prompt', () => {
     const prompt = buildCheckinPrompt(targets, logs)
     expect(prompt).toContain('0.5')
+  })
+
+  it('identifies downward weight trend', () => {
+    const prompt = buildCheckinPrompt(targets, logs)
+    expect(prompt).toContain('down')
+  })
+
+  it('handles empty logs gracefully', () => {
+    const prompt = buildCheckinPrompt(targets, [])
+    expect(prompt).not.toMatch(/NaN|undefined/)
+    expect(prompt).toContain('0 logged days')
+    expect(prompt).toContain('0%')
   })
 })

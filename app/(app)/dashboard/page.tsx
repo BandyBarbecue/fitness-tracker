@@ -7,10 +7,10 @@ export default function DashboardPage() {
   return (
     <div className="px-4 pt-6 pb-8 max-w-lg mx-auto flex flex-col gap-3">
       <h1 className="text-lg font-bold mb-1" style={{ color: 'var(--text-primary)' }}>Dashboard</h1>
-      <WeightChart />
-      <ProteinCard />
-      <DashboardMetrics />
-      <StreakRow />
+      <div className="animate-fade-in-up animate-stagger-1"><WeightChart /></div>
+      <div className="animate-fade-in-up animate-stagger-2"><ProteinCard /></div>
+      <div className="animate-fade-in-up animate-stagger-3"><DashboardMetrics /></div>
+      <div className="animate-fade-in-up animate-stagger-4"><StreakRow /></div>
     </div>
   )
 }

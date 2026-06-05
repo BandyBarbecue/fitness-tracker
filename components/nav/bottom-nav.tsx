@@ -9,7 +9,7 @@ export function BottomNav() {
     <nav
       aria-label="Main navigation"
       className="fixed bottom-0 left-0 right-0 md:hidden grid grid-cols-5 z-50"
-      style={{ background: 'var(--bg)', borderTop: '1px solid var(--border)' }}
+      style={{ background: 'var(--bg)', borderTop: '1px solid var(--border)', paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}
     >
       {tabs.map(({ href, label, Icon }) => {
         const active = isActive(pathname, href)

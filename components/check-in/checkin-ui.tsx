@@ -25,33 +25,38 @@ export function CheckinUI() {
   const { data: past = [], refetch } = usePastCheckins()
 
   async function runCheckin() {
+    if (streaming) return
     setStreaming(true)
     setLiveText('')
-    const periodEnd = format(new Date(), 'yyyy-MM-dd')
-    const periodStart = format(subDays(new Date(), 13), 'yyyy-MM-dd')
+    try {
+      const periodEnd = format(new Date(), 'yyyy-MM-dd')
+      const periodStart = format(subDays(new Date(), 13), 'yyyy-MM-dd')
 
-    const response = await fetch('/api/ai/weekly-checkin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ periodStart, periodEnd }),
-    })
+      const response = await fetch('/api/ai/weekly-checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ periodStart, periodEnd }),
+      })
 
-    if (!response.ok || !response.body) {
-      setLiveText(await response.text())
+      if (!response.ok || !response.body) {
+        setLiveText(await response.text())
+        return
+      }
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        setLiveText(t => t + decoder.decode(value, { stream: true }))
+      }
+
+      refetch()
+    } catch {
+      setLiveText('Something went wrong. Please try again.')
+    } finally {
       setStreaming(false)
-      return
     }
-
-    const reader = response.body.getReader()
-    const decoder = new TextDecoder()
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
-      setLiveText(t => t + decoder.decode(value, { stream: true }))
-    }
-
-    setStreaming(false)
-    refetch()
   }
 
   return (
@@ -72,7 +77,7 @@ export function CheckinUI() {
         <div className="rounded-2xl p-4 text-sm leading-relaxed whitespace-pre-wrap"
           style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
           {liveText}
-          <span className="inline-block w-1.5 h-4 ml-0.5 align-middle animate-pulse" style={{ background: 'var(--accent)' }} />
+          {streaming && <span className="inline-block w-1.5 h-4 ml-0.5 align-middle animate-pulse" style={{ background: 'var(--accent)' }} />}
         </div>
       )}
 

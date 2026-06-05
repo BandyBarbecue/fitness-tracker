@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
 
   const [{ data: logs }, { data: targets }] = await Promise.all([
     supabase.from('daily_logs').select('*')
+      .eq('user_id', user.id)
       .gte('date', periodStart).lte('date', periodEnd)
       .order('date', { ascending: false }),
     supabase.from('targets').select('*').eq('user_id', user.id).maybeSingle(),
@@ -28,30 +29,34 @@ export async function POST(request: NextRequest) {
 
   const stream = new ReadableStream({
     async start(controller) {
-      const anthropicStream = await anthropic.messages.create({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1024,
-        stream: true,
-        messages: [{ role: 'user', content: prompt }],
-      })
+      try {
+        const anthropicStream = await anthropic.messages.create({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1024,
+          stream: true,
+          messages: [{ role: 'user', content: prompt }],
+        })
 
-      for await (const event of anthropicStream) {
-        if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
-          fullText += event.delta.text
-          controller.enqueue(encoder.encode(event.delta.text))
+        for await (const event of anthropicStream) {
+          if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+            fullText += event.delta.text
+            controller.enqueue(encoder.encode(event.delta.text))
+          }
         }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error: insertError } = await (supabase.from('ai_checkins') as any).insert({
+          user_id: user.id,
+          period_start: periodStart,
+          period_end: periodEnd,
+          summary_text: fullText,
+        })
+        if (insertError) console.error('[weekly-checkin] DB insert failed:', insertError)
+
+        controller.close()
+      } catch (err) {
+        controller.error(err)
       }
-
-      // Save completed summary
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (supabase.from('ai_checkins') as any).insert({
-        user_id: user.id,
-        period_start: periodStart,
-        period_end: periodEnd,
-        summary_text: fullText,
-      })
-
-      controller.close()
     },
   })
 

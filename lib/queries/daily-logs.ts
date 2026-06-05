@@ -22,7 +22,7 @@ export function useDailyLog(date: string) {
 }
 
 export function useRecentLogs(limit = 14) {
-  return useQuery({
+  return useQuery<DailyLog[]>({
     queryKey: ['daily-logs', 'recent', limit],
     queryFn: async () => {
       const supabase = createClient()
@@ -32,7 +32,7 @@ export function useRecentLogs(limit = 14) {
         .order('date', { ascending: false })
         .limit(limit)
       if (error) throw error
-      return data ?? []
+      return (data ?? []) as DailyLog[]
     },
   })
 }

@@ -45,7 +45,7 @@ export function useAddPhoto() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error('Not authenticated')
 
-      const ext = file.name.split('.').pop() ?? 'jpg'
+      const ext = file.type.split('/')[1] ?? 'jpg'
       const imagePath = `${user.id}/${uuid()}.${ext}`
 
       const { error: uploadError } = await supabase.storage
@@ -57,7 +57,10 @@ export function useAddPhoto() {
         .insert({ user_id: user.id, date, image_path: imagePath, note: note ?? null })
         .select()
         .single()
-      if (error) throw error
+      if (error) {
+        await supabase.storage.from('progress-photos').remove([imagePath])
+        throw error
+      }
       return data as Photo
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['progress-photos'] }),

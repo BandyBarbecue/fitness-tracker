@@ -29,7 +29,7 @@ function PhotoCard({ photo }: { photo: Photo }) {
 }
 
 export function PhotoGallery() {
-  const { data: photos = [] } = useProgressPhotos()
+  const { data: photos = [], isLoading } = useProgressPhotos()
   const addPhoto = useAddPhoto()
   const inputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string | null>(null)
@@ -76,13 +76,17 @@ export function PhotoGallery() {
         type="file"
         accept="image/*"
         className="hidden"
-        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }}
+        onChange={e => { const f = e.target.files?.[0]; if (f) { handleFile(f); e.target.value = '' } }}
       />
 
       {error && <p className="text-xs mb-3" style={{ color: 'var(--red)' }}>{error}</p>}
 
       {comparing ? (
         <PhotoComparison />
+      ) : isLoading ? (
+        <div className="py-16 text-center">
+          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading…</p>
+        </div>
       ) : photos.length === 0 ? (
         <div className="py-16 text-center">
           <p className="text-sm" style={{ color: 'var(--text-muted)' }}>No photos yet — tap Add to upload your first progress photo</p>

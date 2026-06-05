@@ -24,7 +24,7 @@ function CompareSlot({ photos, selectedId, onSelect }: {
       >
         <option value="">Select date…</option>
         {photos.map(p => (
-          <option key={p.id} value={p.id}>{format(new Date(p.date), 'dd MMM yyyy')}</option>
+          <option key={p.id} value={p.id}>{format(new Date(p.date + 'T00:00:00'), 'dd MMM yyyy')}</option>
         ))}
       </select>
 
@@ -39,7 +39,7 @@ function CompareSlot({ photos, selectedId, onSelect }: {
 
       {selected && (
         <p className="text-[10px] text-center font-semibold" style={{ color: 'var(--text-muted)' }}>
-          {format(new Date(selected.date), 'dd MMM yyyy')}
+          {format(new Date(selected.date + 'T00:00:00'), 'dd MMM yyyy')}
         </p>
       )}
     </div>

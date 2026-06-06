@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useUpsertMealLog, useDeleteMealLog, type MealLog } from '@/lib/queries/meal-logs'
 import { ScreenshotUploader } from './screenshot-uploader'
@@ -9,7 +9,7 @@ import type { ExtractedMacros } from '@/lib/anthropic/extract-macros'
 const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'] as const
 type MealType = typeof MEAL_TYPES[number]
 const MEAL_LABELS: Record<MealType, string> = {
-  breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack',
+  breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snacks',
 }
 
 interface Props {
@@ -38,13 +38,24 @@ export function MealEntrySheet({ date, meal, onClose }: Props) {
     note: meal?.note ?? '',
   })
 
+  const handleClose = useCallback(async () => {
+    if (!meal && draftId) {
+      try {
+        await del.mutateAsync({ id: draftId, date })
+      } catch {
+        // best-effort cleanup — still close even if the delete fails
+      }
+    }
+    onClose()
+  }, [meal, draftId, date, del, onClose])
+
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') handleClose()
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [onClose])
+  }, [handleClose])
 
   function set(key: keyof typeof fields, value: string) {
     setFields(f => ({ ...f, [key]: value }))
@@ -158,7 +169,7 @@ export function MealEntrySheet({ date, meal, onClose }: Props) {
 
   return (
     <>
-      <div className="fixed inset-0 z-[60]" style={{ background: 'rgba(0,0,0,0.6)' }} onClick={onClose} />
+      <div className="fixed inset-0 z-[60]" style={{ background: 'rgba(0,0,0,0.6)' }} onClick={handleClose} />
       <div
         role="dialog"
         aria-modal="true"
@@ -182,7 +193,7 @@ export function MealEntrySheet({ date, meal, onClose }: Props) {
                 </button>
               ))}
             </div>
-            <button type="button" onClick={onClose} className="text-sm py-3 rounded-xl"
+            <button type="button" onClick={handleClose} className="text-sm py-3 rounded-xl"
               style={{ border: '1px solid var(--border)', color: 'var(--text-muted)' }}>
               Cancel
             </button>
@@ -257,7 +268,7 @@ export function MealEntrySheet({ date, meal, onClose }: Props) {
             {error && <p className="text-xs" style={{ color: 'var(--red)' }}>{error}</p>}
 
             <div className="grid gap-2" style={{ gridTemplateColumns: meal ? '1fr 1fr 1fr' : '1fr 2fr' }}>
-              <button type="button" onClick={onClose} className="py-3 rounded-xl text-sm"
+              <button type="button" onClick={handleClose} className="py-3 rounded-xl text-sm"
                 style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
                 Cancel
               </button>

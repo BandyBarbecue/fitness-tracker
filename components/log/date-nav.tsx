@@ -1,9 +1,11 @@
 'use client'
 // components/log/date-nav.tsx
+import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { adjacentLogDate, isFutureLogDate, logDateLabel } from '@/lib/utils/log-date'
+import { DayCalendarSheet } from './day-calendar-sheet'
 
 interface Props {
   date: string
@@ -11,6 +13,7 @@ interface Props {
 
 export function DateNav({ date }: Props) {
   const router = useRouter()
+  const [calendarOpen, setCalendarOpen] = useState(false)
   const today = format(new Date(), 'yyyy-MM-dd')
   const isToday = date === today
   const next = adjacentLogDate(date, 1)
@@ -29,9 +32,14 @@ export function DateNav({ date }: Props) {
       </button>
 
       <div className="flex flex-col items-center gap-1">
-        <span className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
+        <button
+          type="button"
+          onClick={() => setCalendarOpen(true)}
+          className="text-lg font-bold"
+          style={{ color: 'var(--text-primary)' }}
+        >
           {logDateLabel(date, today)}
-        </span>
+        </button>
         {!isToday && (
           <button
             type="button"
@@ -54,6 +62,7 @@ export function DateNav({ date }: Props) {
       >
         <ChevronRight size={20} />
       </button>
+      {calendarOpen && <DayCalendarSheet date={date} onClose={() => setCalendarOpen(false)} />}
     </div>
   )
 }

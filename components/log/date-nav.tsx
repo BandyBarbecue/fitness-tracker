@@ -1,5 +1,5 @@
-// components/log/date-nav.tsx
 'use client'
+// components/log/date-nav.tsx
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'

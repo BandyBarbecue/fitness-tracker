@@ -144,20 +144,43 @@ This hook is the single source of truth for "what are this day's nutrition total
 
 ---
 
-## 5. Out of Scope
+## 5. Weekly Check-In: Meal Distribution
 
-- No changes to the AI weekly check-in (`/api/ai/weekly-checkin`) — it can be extended to reference per-meal data in a future sub-project if useful, but that's not part of this one.
+The AI coaching prompt gets one addition: awareness of how macros are distributed across meal types.
+
+- `app/api/ai/weekly-checkin/route.ts` fetches `meal_logs` for the same `[periodStart, periodEnd]` range alongside the existing `daily_logs`/`targets` queries, and passes the rows through.
+- `buildCheckinPrompt` (in `lib/anthropic/weekly-checkin.ts`) gains an optional `mealLogs: MealLogRow[]` parameter. When meal rows exist for the period, the prompt gains a **"Meal distribution"** section: average calories/protein/fat/carbs contributed by each meal type (breakfast/lunch/dinner/snacks), computed across the days that have per-meal logs, e.g.:
+
+  ```
+  Meal distribution (avg across 5 days with per-meal logs):
+  - Breakfast: 420 kcal (18%), 28g protein
+  - Lunch:     650 kcal (28%), 45g protein
+  - Dinner:    780 kcal (33%), 62g protein
+  - Snacks:    480 kcal (21%), 35g protein
+  ```
+
+  When no meal rows exist for the period, the prompt is unchanged from today — this stays additive, not a behavior change for days/periods logged the old way.
+- The closing instruction ("Cover: ...") gains one more item: how protein/calories are distributed across the day, and whether that supports the client's training and recovery.
+- `buildCheckinPrompt` remains a pure function and is extended following the existing test pattern in `weekly-checkin.test.ts` (new cases for: prompt includes the distribution section when meal data is present; prompt is unchanged when it's absent; percentages/averages compute correctly).
+
+---
+
+## 6. Out of Scope
+
 - No global setting or per-day toggle for "simple vs. per-meal" mode — the mode is purely a function of whether meals exist for the date (per design decision above).
 - Water is a simple tracked number; no targets, charts, or reminders for it in this sub-project.
 
 ---
 
-## 6. Testing
+## 7. Testing
 
-- Unit-level: pure helpers (e.g. the meal-summing logic inside `useNutritionForDate`) get plain function tests where practical.
+- Unit-level: pure helpers (e.g. the meal-summing logic inside `useNutritionForDate`, and the meal-distribution computation in `buildCheckinPrompt`) get plain function tests, following the existing pattern in `weekly-checkin.test.ts`.
 - Manual verification on `/log/[date]`:
   - Logging a day with no meals behaves exactly as today (regression check)
   - Adding a meal switches the section into per-meal mode; totals update correctly as meals are added/edited/deleted
   - Screenshot upload + AI extraction works for a meal entry (mirrors the existing daily flow)
   - Dashboard "Calories" card reflects meal-summed totals on days with meals, and `daily_logs.calories` on days without
   - Water field saves and round-trips via `useUpsertLog`
+- Manual verification on `/check-in`:
+  - Running a check-in over a period with per-meal logs includes the "Meal distribution" section and references it in the summary
+  - Running a check-in over a period with no per-meal logs is unchanged from today's output shape

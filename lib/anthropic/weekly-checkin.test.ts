@@ -56,3 +56,48 @@ describe('buildCheckinPrompt', () => {
     expect(prompt).toContain('0%')
   })
 })
+
+describe('buildCheckinPrompt — meal distribution', () => {
+  const mealLogs: Array<{
+    date: string
+    meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+    calories: number | null
+    protein_g: number | null
+    fat_g: number | null
+    carbs_g: number | null
+  }> = [
+    { date: '2026-05-29', meal_type: 'breakfast', calories: 400, protein_g: 30, fat_g: 12, carbs_g: 40 },
+    { date: '2026-05-29', meal_type: 'dinner', calories: 800, protein_g: 60, fat_g: 30, carbs_g: 70 },
+    { date: '2026-05-30', meal_type: 'breakfast', calories: 440, protein_g: 26, fat_g: 14, carbs_g: 44 },
+    { date: '2026-05-30', meal_type: 'dinner', calories: 760, protein_g: 56, fat_g: 28, carbs_g: 66 },
+  ]
+
+  it('includes a meal distribution section when meal logs are present', () => {
+    const prompt = buildCheckinPrompt(targets, logs, mealLogs)
+    expect(prompt).toContain('Meal distribution')
+  })
+
+  it('omits the meal distribution section when no meal logs are passed', () => {
+    const prompt = buildCheckinPrompt(targets, logs)
+    expect(prompt).not.toContain('Meal distribution')
+  })
+
+  it('computes average calories, percentage share, and average protein per meal type', () => {
+    // Breakfast avg: (400+440)/2 = 420 kcal, (30+26)/2 = 28g protein
+    // Dinner avg: (800+760)/2 = 780 kcal, (60+56)/2 = 58g protein
+    // Total avg calories = 1200 → Breakfast 35%, Dinner 65%
+    const prompt = buildCheckinPrompt(targets, logs, mealLogs)
+    expect(prompt).toContain('Breakfast: 420 kcal (35%), 28g protein')
+    expect(prompt).toContain('Dinner: 780 kcal (65%), 58g protein')
+  })
+
+  it('mentions meal distribution in the coaching instructions when present', () => {
+    const prompt = buildCheckinPrompt(targets, logs, mealLogs)
+    expect(prompt).toContain('how protein and calories are distributed across meals')
+  })
+
+  it('does not mention meal distribution in the coaching instructions when absent', () => {
+    const prompt = buildCheckinPrompt(targets, logs)
+    expect(prompt).not.toContain('how protein and calories are distributed across meals')
+  })
+})

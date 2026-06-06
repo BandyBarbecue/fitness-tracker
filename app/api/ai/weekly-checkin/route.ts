@@ -12,17 +12,20 @@ export async function POST(request: NextRequest) {
 
   const { periodStart, periodEnd } = await request.json() as { periodStart: string; periodEnd: string }
 
-  const [{ data: logs }, { data: targets }] = await Promise.all([
+  const [{ data: logs }, { data: targets }, { data: mealLogs }] = await Promise.all([
     supabase.from('daily_logs').select('*')
       .eq('user_id', user.id)
       .gte('date', periodStart).lte('date', periodEnd)
       .order('date', { ascending: false }),
     supabase.from('targets').select('*').eq('user_id', user.id).maybeSingle(),
+    supabase.from('meal_logs').select('date, meal_type, calories, protein_g, fat_g, carbs_g')
+      .eq('user_id', user.id)
+      .gte('date', periodStart).lte('date', periodEnd),
   ])
 
   if (!targets) return new Response('No targets configured — set up your targets in Settings first', { status: 422 })
 
-  const prompt = buildCheckinPrompt(targets, logs ?? [])
+  const prompt = buildCheckinPrompt(targets, logs ?? [], mealLogs ?? [])
 
   const encoder = new TextEncoder()
   let fullText = ''

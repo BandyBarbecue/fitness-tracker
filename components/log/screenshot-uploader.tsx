@@ -9,13 +9,16 @@ interface UploadResult {
   imagePath: string
 }
 
+export type UploadTarget =
+  | { type: 'daily'; dailyLogId: string | null; date: string }
+  | { type: 'meal'; mealLogId: string }
+
 interface Props {
-  dailyLogId: string | null
-  date: string
+  target: UploadTarget
   onUploaded: (result: UploadResult) => void
 }
 
-export function ScreenshotUploader({ dailyLogId, date, onUploaded }: Props) {
+export function ScreenshotUploader({ target, onUploaded }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -40,25 +43,32 @@ export function ScreenshotUploader({ dailyLogId, date, onUploaded }: Props) {
       return
     }
 
-    // Ensure a daily_logs row exists before inserting the screenshot FK
-    let logId = dailyLogId
-    if (!logId) {
-      const { data: log, error: logError } = await supabase
-        .from('daily_logs')
-        .upsert({ user_id: user.id, date } as any, { onConflict: 'user_id,date' })
-        .select('id')
-        .single() as any
-      if (logError || !log) {
-        setError('Could not create log entry')
-        setUploading(false)
-        return
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let screenshotInsert: any = { user_id: user.id, image_path: imagePath, confirmed: false }
+
+    if (target.type === 'daily') {
+      let logId = target.dailyLogId
+      if (!logId) {
+        const { data: log, error: logError } = await supabase
+          .from('daily_logs')
+          .upsert({ user_id: user.id, date: target.date } as any, { onConflict: 'user_id,date' })
+          .select('id')
+          .single() as any
+        if (logError || !log) {
+          setError('Could not create log entry')
+          setUploading(false)
+          return
+        }
+        logId = (log as { id: string }).id
       }
-      logId = (log as { id: string }).id
+      screenshotInsert = { ...screenshotInsert, daily_log_id: logId }
+    } else {
+      screenshotInsert = { ...screenshotInsert, meal_log_id: target.mealLogId }
     }
 
     const { data: screenshot, error: screenshotError } = await supabase
       .from('food_screenshots')
-      .insert({ user_id: user.id, daily_log_id: logId, image_path: imagePath, confirmed: false } as any)
+      .insert(screenshotInsert)
       .select('id')
       .single() as any
 

@@ -134,8 +134,7 @@ export function LogForm({ date }: Props) {
       <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{date}</h1>
 
       <ScreenshotUploader
-        dailyLogId={existing?.id ?? null}
-        date={date}
+        target={{ type: 'daily', dailyLogId: existing?.id ?? null, date }}
         onUploaded={async ({ screenshotId, imagePath }) => {
           setExtracting(true)
           setPendingScreenshot({ screenshotId, imagePath })

@@ -4,7 +4,7 @@
     {
       "id": 0,
       "subject": "Task 1: Pure Date-String Helpers",
-      "status": "pending",
+      "status": "completed",
       "description": "**Goal:** Add small, independently-tested pure functions for date validation, adjacency, future-checking, and relative labeling — the logic both `DateNav` and the page-level guard depend on.\n\n**Files:**\n- Create: `lib/utils/log-date.ts`\n- Test: `lib/utils/log-date.test.ts`\n\n**Acceptance Criteria:**\n- [ ] `isValidLogDate` returns `true` only for well-formed, real `yyyy-MM-dd` calendar dates\n- [ ] `isFutureLogDate` correctly compares two `yyyy-MM-dd` strings\n- [ ] `adjacentLogDate` correctly steps a date forward/back across month and year boundaries\n- [ ] `logDateLabel` returns `'Today'`, `'Yesterday'`, or a formatted label (`'EEE, d MMM'`) for any other date\n\n**Verify:** `npx vitest run lib/utils/log-date.test.ts` → all tests pass\n\n```json:metadata\n{\"files\": [\"lib/utils/log-date.ts\", \"lib/utils/log-date.test.ts\"], \"verifyCommand\": \"npx vitest run lib/utils/log-date.test.ts\", \"acceptanceCriteria\": [\"isValidLogDate returns true only for well-formed real yyyy-MM-dd dates\", \"isFutureLogDate correctly compares two yyyy-MM-dd strings\", \"adjacentLogDate steps across month/year boundaries\", \"logDateLabel returns Today/Yesterday/formatted label\"]}\n```"
     },
     {
@@ -29,5 +29,5 @@
       "description": "**Goal:** Make the date label in `DateNav` open a month-grid calendar popup (custom-built, styled to match the app's dark/emerald theme) that marks days with saved entries and lets the user jump straight to any past date.\n\n**Files:**\n- Create: `components/log/day-calendar-sheet.tsx`\n- Modify: `components/log/date-nav.tsx`\n\n**Acceptance Criteria:**\n- [ ] Tapping the date label opens a calendar sheet showing the month of the currently-viewed date\n- [ ] Days with a saved `daily_logs` entry show a small accent-colored dot\n- [ ] Today is ringed, the currently-viewed date has a filled accent background\n- [ ] Future dates are dimmed and not selectable\n- [ ] Tapping a valid date navigates to `/log/[that-date]` and closes the sheet\n- [ ] Prev/next month arrows browse the calendar without navigating the page\n- [ ] Backdrop click or the close button dismisses the sheet without navigating\n\n**Verify:** Manual smoke test — `npm run dev`, open the calendar from `/log`, browse months, confirm dot markers appear only on days you've actually logged, select a past date and confirm it navigates there, and confirm future dates can't be selected\n\n```json:metadata\n{\"files\": [\"components/log/day-calendar-sheet.tsx\", \"components/log/date-nav.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"calendar opens on the viewed date's month\", \"logged days show accent dot\", \"today ringed and viewed date highlighted\", \"future dates dimmed and unselectable\", \"selecting a date navigates and closes sheet\", \"month arrows browse without navigating\", \"backdrop/close dismiss without navigating\"]}\n```"
     }
   ],
-  "lastUpdated": "2026-06-06T00:00:00Z"
+  "lastUpdated": "2026-06-06T12:40:00Z"
 }

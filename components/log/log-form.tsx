@@ -2,9 +2,12 @@
 import { useState, useEffect } from 'react'
 import { SessionPicker, type SessionType } from './session-picker'
 import { useDailyLog, useUpsertLog } from '@/lib/queries/daily-logs'
+import { useMealLogsForDate } from '@/lib/queries/meal-logs'
 import { createClient } from '@/lib/supabase/client'
 import { ScreenshotUploader } from './screenshot-uploader'
 import { MacroConfirm } from './macro-confirm'
+import { MealList } from './meal-list'
+import { MealEntrySheet } from './meal-entry-sheet'
 import type { ExtractedMacros } from '@/lib/anthropic/extract-macros'
 import { DateNav } from './date-nav'
 
@@ -19,10 +22,13 @@ export function LogForm({ date }: Props) {
   const [extracting, setExtracting] = useState(false)
   const [extracted, setExtracted] = useState<ExtractedMacros | null>(null)
 
+  const { data: meals = [] } = useMealLogsForDate(date)
+  const [showMealEntry, setShowMealEntry] = useState(false)
+
   const [fields, setFields] = useState({
     weight_kg: '', calories: '', protein_g: '', fat_g: '', carbs_g: '',
     steps: '', session_type: null as SessionType | null,
-    sleep_hours: '', mood: '', note: '',
+    sleep_hours: '', mood: '', water_l: '', note: '',
   })
 
   useEffect(() => {
@@ -37,6 +43,7 @@ export function LogForm({ date }: Props) {
         session_type: (existing.session_type as SessionType) ?? null,
         sleep_hours:  String(existing.sleep_hours ?? ''),
         mood:         String(existing.mood ?? ''),
+        water_l:      String(existing.water_l ?? ''),
         note:         existing.note ?? '',
       })
     }
@@ -65,6 +72,7 @@ export function LogForm({ date }: Props) {
         session_type: fields.session_type ?? null,
         sleep_hours:  fields.sleep_hours  ? parseFloat(fields.sleep_hours)  : null,
         mood:         fields.mood         ? parseInt(fields.mood)            : null,
+        water_l:      fields.water_l      ? parseFloat(fields.water_l)       : null,
         note:         fields.note || null,
       })
       if (pendingScreenshot) {
@@ -134,55 +142,72 @@ export function LogForm({ date }: Props) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-8 pt-6 max-w-lg mx-auto">
       <DateNav date={date} />
 
-      <ScreenshotUploader
-        target={{ type: 'daily', dailyLogId: existing?.id ?? null, date }}
-        onUploaded={async ({ screenshotId, imagePath }) => {
-          setExtracting(true)
-          setPendingScreenshot({ screenshotId, imagePath })
-          const res = await fetch('/api/ai/extract-macros', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ screenshotId, imagePath }),
-          })
-          const data = await res.json()
-          setExtracting(false)
-          if (res.ok) setExtracted(data)
-          else setToast('Could not read screenshot — enter manually')
-        }}
-      />
-
       {numInput('Morning Weight', 'weight_kg', 'kg')}
 
-      <div>
-        <label className="block text-[10px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-muted)' }}>
-          Nutrition
-        </label>
-        <div className="grid grid-cols-4 gap-2">
-          {(['calories','protein_g','fat_g','carbs_g'] as const).map((key, i) => (
-            <div
-              key={key}
-              className="rounded-xl px-2 py-3 text-center"
-              style={{
-                background: 'var(--surface)',
-                border: `1px solid ${i === 1 ? 'color-mix(in srgb, var(--accent) 25%, transparent)' : 'var(--border)'}`,
-              }}
-            >
-              <input
-                type="number"
-                inputMode="decimal"
-                value={fields[key] as string}
-                onChange={e => set(key, e.target.value)}
-                placeholder="—"
-                className="bg-transparent outline-none text-sm font-bold w-full text-center"
-                style={{ color: i === 1 ? 'var(--accent)' : 'var(--text-primary)' }}
-              />
-              <div className="text-[9px] mt-1" style={{ color: 'var(--text-muted)' }}>
-                {['kcal','prot','fat','carbs'][i]}
-              </div>
+      {meals.length === 0 ? (
+        <>
+          <ScreenshotUploader
+            target={{ type: 'daily', dailyLogId: existing?.id ?? null, date }}
+            onUploaded={async ({ screenshotId, imagePath }) => {
+              setExtracting(true)
+              setPendingScreenshot({ screenshotId, imagePath })
+              const res = await fetch('/api/ai/extract-macros', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ screenshotId, imagePath }),
+              })
+              const data = await res.json()
+              setExtracting(false)
+              if (res.ok) setExtracted(data)
+              else setToast('Could not read screenshot — enter manually')
+            }}
+          />
+
+          <div>
+            <label className="block text-[10px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-muted)' }}>
+              Nutrition
+            </label>
+            <div className="grid grid-cols-4 gap-2">
+              {(['calories','protein_g','fat_g','carbs_g'] as const).map((key, i) => (
+                <div
+                  key={key}
+                  className="rounded-xl px-2 py-3 text-center"
+                  style={{
+                    background: 'var(--surface)',
+                    border: `1px solid ${i === 1 ? 'color-mix(in srgb, var(--accent) 25%, transparent)' : 'var(--border)'}`,
+                  }}
+                >
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    value={fields[key] as string}
+                    onChange={e => set(key, e.target.value)}
+                    placeholder="—"
+                    className="bg-transparent outline-none text-sm font-bold w-full text-center"
+                    style={{ color: i === 1 ? 'var(--accent)' : 'var(--text-primary)' }}
+                  />
+                  <div className="text-[9px] mt-1" style={{ color: 'var(--text-muted)' }}>
+                    {['kcal','prot','fat','carbs'][i]}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+            <button type="button" onClick={() => setShowMealEntry(true)}
+              className="mt-2 text-xs font-semibold" style={{ color: 'var(--accent)' }}>
+              + Log by meal instead
+            </button>
+          </div>
+        </>
+      ) : (
+        <div>
+          <label className="block text-[10px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-muted)' }}>
+            Nutrition
+          </label>
+          <MealList date={date} />
         </div>
-      </div>
+      )}
+
+      {showMealEntry && <MealEntrySheet date={date} meal={null} onClose={() => setShowMealEntry(false)} />}
 
       {numInput('Steps', 'steps', 'steps')}
 
@@ -216,7 +241,8 @@ export function LogForm({ date }: Props) {
       {showOptional && (
         <div className="grid grid-cols-2 gap-3">
           {numInput('Sleep', 'sleep_hours', 'hrs')}
-          <div>
+          {numInput('Water', 'water_l', 'L')}
+          <div className="col-span-2">
             <label className="block text-[10px] font-semibold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-muted)' }}>
               Mood
             </label>

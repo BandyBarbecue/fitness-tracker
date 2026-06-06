@@ -24,6 +24,7 @@ export type Database = {
           session_type: 'push' | 'pull' | 'legs' | 'upper' | 'rest' | 'cardio' | null
           sleep_hours: number | null
           mood: number | null
+          water_l: number | null
           note: string | null
           created_at: string
           updated_at: string
@@ -41,6 +42,7 @@ export type Database = {
           session_type?: 'push' | 'pull' | 'legs' | 'upper' | 'rest' | 'cardio' | null
           sleep_hours?: number | null
           mood?: number | null
+          water_l?: number | null
           note?: string | null
           created_at?: string
           updated_at?: string
@@ -58,6 +60,7 @@ export type Database = {
           session_type?: 'push' | 'pull' | 'legs' | 'upper' | 'rest' | 'cardio' | null
           sleep_hours?: number | null
           mood?: number | null
+          water_l?: number | null
           note?: string | null
           created_at?: string
           updated_at?: string
@@ -67,7 +70,8 @@ export type Database = {
         Row: {
           id: string
           user_id: string
-          daily_log_id: string
+          daily_log_id: string | null
+          meal_log_id: string | null
           image_path: string
           extracted_json: Json | null
           confirmed: boolean
@@ -76,7 +80,8 @@ export type Database = {
         Insert: {
           id?: string
           user_id: string
-          daily_log_id: string
+          daily_log_id?: string | null
+          meal_log_id?: string | null
           image_path: string
           extracted_json?: Json | null
           confirmed?: boolean
@@ -85,11 +90,53 @@ export type Database = {
         Update: {
           id?: string
           user_id?: string
-          daily_log_id?: string
+          daily_log_id?: string | null
+          meal_log_id?: string | null
           image_path?: string
           extracted_json?: Json | null
           confirmed?: boolean
           created_at?: string
+        }
+      }
+      meal_logs: {
+        Row: {
+          id: string
+          user_id: string
+          date: string
+          meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+          calories: number | null
+          protein_g: number | null
+          fat_g: number | null
+          carbs_g: number | null
+          note: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          date: string
+          meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+          calories?: number | null
+          protein_g?: number | null
+          fat_g?: number | null
+          carbs_g?: number | null
+          note?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          date?: string
+          meal_type?: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+          calories?: number | null
+          protein_g?: number | null
+          fat_g?: number | null
+          carbs_g?: number | null
+          note?: string | null
+          created_at?: string
+          updated_at?: string
         }
       }
       progress_photos: {

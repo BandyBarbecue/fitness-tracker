@@ -90,7 +90,7 @@ export function useLoggedDatesInMonth(monthStart: string) {
         .gte('date', monthStart)
         .lte('date', monthEnd)
       if (error) throw error
-      return new Set((data ?? [] as Array<{ date: string }>).map(row => (row as { date: string }).date))
+      return new Set(((data ?? []) as Array<{ date: string }>).map(row => row.date))
     },
   })
 }

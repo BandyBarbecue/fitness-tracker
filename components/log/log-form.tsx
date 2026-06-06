@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { ScreenshotUploader } from './screenshot-uploader'
 import { MacroConfirm } from './macro-confirm'
 import type { ExtractedMacros } from '@/lib/anthropic/extract-macros'
+import { DateNav } from './date-nav'
 
 interface Props { date: string }
 
@@ -131,7 +132,7 @@ export function LogForm({ date }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 pb-8 pt-6 max-w-lg mx-auto">
-      <h1 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>{date}</h1>
+      <DateNav date={date} />
 
       <ScreenshotUploader
         target={{ type: 'daily', dailyLogId: existing?.id ?? null, date }}

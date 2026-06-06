@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import type { Database } from '@/types/database'
+import { format, parseISO, endOfMonth } from 'date-fns'
 
 type DailyLog = Database['public']['Tables']['daily_logs']['Row']
 type DailyLogInsert = Database['public']['Tables']['daily_logs']['Insert']
@@ -73,6 +74,23 @@ export function useWeightHistory(days = 30) {
         .order('date', { ascending: true })
       if (error) throw error
       return (data ?? []) as Array<{ date: string; weight_kg: number }>
+    },
+  })
+}
+
+export function useLoggedDatesInMonth(monthStart: string) {
+  return useQuery<Set<string>>({
+    queryKey: ['daily-logs', 'logged-dates', monthStart],
+    queryFn: async () => {
+      const supabase = createClient()
+      const monthEnd = format(endOfMonth(parseISO(monthStart)), 'yyyy-MM-dd')
+      const { data, error } = await supabase
+        .from('daily_logs')
+        .select('date')
+        .gte('date', monthStart)
+        .lte('date', monthEnd)
+      if (error) throw error
+      return new Set((data ?? [] as Array<{ date: string }>).map(row => (row as { date: string }).date))
     },
   })
 }

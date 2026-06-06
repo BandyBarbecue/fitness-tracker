@@ -42,12 +42,12 @@ export function DayCalendarSheet({ date, onClose }: Props) {
 
   return (
     <>
-      <div className="fixed inset-0 z-40" style={{ background: 'rgba(0,0,0,0.6)' }} onClick={onClose} />
+      <div className="fixed inset-0 z-[60]" style={{ background: 'rgba(0,0,0,0.6)' }} onClick={onClose} />
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Calendar"
-        className="fixed inset-x-0 bottom-0 md:inset-x-auto md:left-1/2 md:top-1/2 md:bottom-auto md:-translate-x-1/2 md:-translate-y-1/2 z-50 rounded-t-2xl md:rounded-2xl p-4 max-w-sm w-full md:mx-auto animate-fade-in-up"
+        className="fixed inset-x-0 bottom-0 md:inset-x-auto md:left-1/2 md:top-1/2 md:bottom-auto md:-translate-x-1/2 md:-translate-y-1/2 z-[70] rounded-t-2xl md:rounded-2xl p-4 max-w-sm w-full md:mx-auto animate-fade-in-up"
         style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
       >
         <div className="flex items-center justify-between mb-3">

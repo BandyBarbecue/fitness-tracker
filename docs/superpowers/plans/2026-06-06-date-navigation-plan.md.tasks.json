@@ -1,0 +1,33 @@
+{
+  "planPath": "docs/superpowers/plans/2026-06-06-date-navigation-plan.md",
+  "tasks": [
+    {
+      "id": 0,
+      "subject": "Task 1: Pure Date-String Helpers",
+      "status": "pending",
+      "description": "**Goal:** Add small, independently-tested pure functions for date validation, adjacency, future-checking, and relative labeling — the logic both `DateNav` and the page-level guard depend on.\n\n**Files:**\n- Create: `lib/utils/log-date.ts`\n- Test: `lib/utils/log-date.test.ts`\n\n**Acceptance Criteria:**\n- [ ] `isValidLogDate` returns `true` only for well-formed, real `yyyy-MM-dd` calendar dates\n- [ ] `isFutureLogDate` correctly compares two `yyyy-MM-dd` strings\n- [ ] `adjacentLogDate` correctly steps a date forward/back across month and year boundaries\n- [ ] `logDateLabel` returns `'Today'`, `'Yesterday'`, or a formatted label (`'EEE, d MMM'`) for any other date\n\n**Verify:** `npx vitest run lib/utils/log-date.test.ts` → all tests pass\n\n```json:metadata\n{\"files\": [\"lib/utils/log-date.ts\", \"lib/utils/log-date.test.ts\"], \"verifyCommand\": \"npx vitest run lib/utils/log-date.test.ts\", \"acceptanceCriteria\": [\"isValidLogDate returns true only for well-formed real yyyy-MM-dd dates\", \"isFutureLogDate correctly compares two yyyy-MM-dd strings\", \"adjacentLogDate steps across month/year boundaries\", \"logDateLabel returns Today/Yesterday/formatted label\"]}\n```"
+    },
+    {
+      "id": 1,
+      "subject": "Task 2: useLoggedDatesInMonth Query Hook",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "**Goal:** Add a TanStack Query hook that fetches which dates within a given month have a saved `daily_logs` entry, returned as a `Set<string>` for fast dot-marker lookups in the calendar.\n\n**Files:**\n- Modify: `lib/queries/daily-logs.ts`\n\n**Acceptance Criteria:**\n- [ ] `useLoggedDatesInMonth(monthStart)` queries `daily_logs` for dates within `[monthStart, monthEnd]` inclusive\n- [ ] Returns a `Set<string>` of `'yyyy-MM-dd'` date strings\n- [ ] Caches per-month via a `['daily-logs', 'logged-dates', monthStart]` query key, matching the existing convention used by `useWeightHistory`\n\n**Verify:** `npm run build` → compiles with no TypeScript errors (no dedicated unit test — thin Supabase query wrapper, consistent with existing untested query hooks)\n\n```json:metadata\n{\"files\": [\"lib/queries/daily-logs.ts\"], \"verifyCommand\": \"npm run build\", \"acceptanceCriteria\": [\"useLoggedDatesInMonth queries daily_logs within month range\", \"returns a Set<string> of yyyy-MM-dd strings\", \"uses query key ['daily-logs','logged-dates', monthStart]\"]}\n```"
+    },
+    {
+      "id": 2,
+      "subject": "Task 3: DateNav Header Bar + Page-Level Date Guard",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "**Goal:** Replace the static `<h1>{date}</h1>` in `LogForm` with a `DateNav` header providing prev/next-day navigation, a relative date label, and a \"Today\" shortcut — and add server-side validation so malformed or future date URLs redirect to `/log` instead of crashing the page.\n\n**Files:**\n- Create: `components/log/date-nav.tsx`\n- Modify: `app/(app)/log/[date]/page.tsx`\n- Modify: `components/log/log-form.tsx:134`\n\n**Acceptance Criteria:**\n- [ ] Tapping the back arrow navigates to the previous day's `/log/[date]`\n- [ ] Tapping the forward arrow navigates to the next day, and is disabled when the next day would be in the future\n- [ ] The date label shows \"Today\", \"Yesterday\", or `'EEE, d MMM'` for other dates\n- [ ] A \"Today\" pill appears only when viewing a non-today date, and navigates to today when tapped\n- [ ] Visiting `/log/not-a-date` or `/log/2099-01-01` redirects to `/log` (which redirects to today)\n\n**Verify:** Manual smoke test — `npm run dev`, visit `/log`, use the arrows and Today pill to move between several days, then visit `/log/bogus-date` and `/log/2099-01-01` directly and confirm both redirect to today's log\n\n```json:metadata\n{\"files\": [\"components/log/date-nav.tsx\", \"app/(app)/log/[date]/page.tsx\", \"components/log/log-form.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"back/next arrows navigate adjacent days\", \"forward arrow disabled at today\", \"date label shows Today/Yesterday/formatted label\", \"Today pill shown only on non-today dates\", \"invalid and future date URLs redirect to today\"]}\n```"
+    },
+    {
+      "id": 3,
+      "subject": "Task 4: DayCalendarSheet Calendar Popup",
+      "status": "pending",
+      "blockedBy": [1, 2],
+      "description": "**Goal:** Make the date label in `DateNav` open a month-grid calendar popup (custom-built, styled to match the app's dark/emerald theme) that marks days with saved entries and lets the user jump straight to any past date.\n\n**Files:**\n- Create: `components/log/day-calendar-sheet.tsx`\n- Modify: `components/log/date-nav.tsx`\n\n**Acceptance Criteria:**\n- [ ] Tapping the date label opens a calendar sheet showing the month of the currently-viewed date\n- [ ] Days with a saved `daily_logs` entry show a small accent-colored dot\n- [ ] Today is ringed, the currently-viewed date has a filled accent background\n- [ ] Future dates are dimmed and not selectable\n- [ ] Tapping a valid date navigates to `/log/[that-date]` and closes the sheet\n- [ ] Prev/next month arrows browse the calendar without navigating the page\n- [ ] Backdrop click or the close button dismisses the sheet without navigating\n\n**Verify:** Manual smoke test — `npm run dev`, open the calendar from `/log`, browse months, confirm dot markers appear only on days you've actually logged, select a past date and confirm it navigates there, and confirm future dates can't be selected\n\n```json:metadata\n{\"files\": [\"components/log/day-calendar-sheet.tsx\", \"components/log/date-nav.tsx\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"calendar opens on the viewed date's month\", \"logged days show accent dot\", \"today ringed and viewed date highlighted\", \"future dates dimmed and unselectable\", \"selecting a date navigates and closes sheet\", \"month arrows browse without navigating\", \"backdrop/close dismiss without navigating\"]}\n```"
+    }
+  ],
+  "lastUpdated": "2026-06-06T00:00:00Z"
+}

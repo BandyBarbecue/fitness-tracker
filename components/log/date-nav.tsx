@@ -35,6 +35,8 @@ export function DateNav({ date }: Props) {
         <button
           type="button"
           onClick={() => setCalendarOpen(true)}
+          aria-haspopup="dialog"
+          aria-label="Open calendar"
           className="text-lg font-bold"
           style={{ color: 'var(--text-primary)' }}
         >

@@ -1,6 +1,6 @@
 'use client'
 // components/log/day-calendar-sheet.tsx
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   format, parseISO, startOfMonth, endOfMonth, startOfWeek, endOfWeek,
@@ -26,6 +26,14 @@ export function DayCalendarSheet({ date, onClose }: Props) {
   const days = eachDayOfInterval({ start: gridStart, end: gridEnd })
   const today = new Date()
 
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
+
   function selectDate(d: Date) {
     if (isAfter(d, today) && !isSameDay(d, today)) return
     router.push(`/log/${format(d, 'yyyy-MM-dd')}`)
@@ -36,6 +44,9 @@ export function DayCalendarSheet({ date, onClose }: Props) {
     <>
       <div className="fixed inset-0 z-40" style={{ background: 'rgba(0,0,0,0.6)' }} onClick={onClose} />
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Calendar"
         className="fixed inset-x-0 bottom-0 md:inset-x-auto md:left-1/2 md:top-1/2 md:bottom-auto md:-translate-x-1/2 md:-translate-y-1/2 z-50 rounded-t-2xl md:rounded-2xl p-4 max-w-sm w-full md:mx-auto animate-fade-in-up"
         style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
       >

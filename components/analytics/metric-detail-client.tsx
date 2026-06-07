@@ -6,7 +6,7 @@ import { PeriodSelector, type Period } from './period-selector'
 import { DetailChart } from './detail-chart'
 import { CorrelationPanel } from './correlation-panel'
 import {
-  useAnalyticsForPeriod, periodBounds, previousPeriodBounds, avgOf, hitRate,
+  useAnalyticsForPeriod, useMealLogsForPeriod, periodBounds, previousPeriodBounds, avgOf, hitRate, mergeNutrition,
 } from '@/lib/queries/analytics'
 import { useTargets } from '@/lib/queries/targets'
 import { METRIC_CONFIG, type MetricSlug } from './metric-config'
@@ -19,7 +19,12 @@ export function MetricDetailClient({ slug }: { slug: MetricSlug }) {
 
   const { data: logs = [], isLoading }    = useAnalyticsForPeriod(startDate, endDate)
   const { data: prevLogs = [] }           = useAnalyticsForPeriod(prev.startDate, prev.endDate)
+  const { data: mealLogs = [] }           = useMealLogsForPeriod(startDate, endDate)
+  const { data: prevMealLogs = [] }       = useMealLogsForPeriod(prev.startDate, prev.endDate)
   const { data: targets }                 = useTargets()
+
+  const enrichedLogs     = mergeNutrition(logs, mealLogs)
+  const enrichedPrevLogs = mergeNutrition(prevLogs, prevMealLogs)
 
   const config = METRIC_CONFIG[slug]
   const target = slug === 'calories' ? targets?.calories
@@ -27,8 +32,8 @@ export function MetricDetailClient({ slug }: { slug: MetricSlug }) {
     : slug === 'steps'   ? targets?.steps
     : null
 
-  const currentValues = logs.map(l => config.getValue(l))
-  const prevValues    = prevLogs.map(l => config.getValue(l))
+  const currentValues = enrichedLogs.map(l => config.getValue(l))
+  const prevValues    = enrichedPrevLogs.map(l => config.getValue(l))
   const currentAvg    = avgOf(currentValues)
   const prevAvg       = avgOf(prevValues)
 
@@ -83,9 +88,9 @@ export function MetricDetailClient({ slug }: { slug: MetricSlug }) {
 
         {isLoading ? (
           <div className="rounded-2xl h-56 animate-pulse" style={{ background: 'var(--surface)' }} />
-        ) : logs.length > 0 ? (
+        ) : enrichedLogs.length > 0 ? (
           <div className="rounded-2xl p-3" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-            <DetailChart slug={slug} data={logs} target={target} />
+            <DetailChart slug={slug} data={enrichedLogs} target={target} />
           </div>
         ) : (
           <div className="rounded-2xl p-6 text-center text-sm" style={{ background: 'var(--surface)', color: 'var(--text-muted)' }}>
@@ -104,7 +109,7 @@ export function MetricDetailClient({ slug }: { slug: MetricSlug }) {
           </div>
         )}
 
-        {logs.length > 0 && <CorrelationPanel slug={slug} data={logs} />}
+        {enrichedLogs.length > 0 && <CorrelationPanel slug={slug} data={enrichedLogs} />}
       </div>
     </div>
   )

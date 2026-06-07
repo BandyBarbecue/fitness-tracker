@@ -48,6 +48,28 @@ export function sparklineValues(data: (number | null | undefined)[], count = 7):
   return data.slice(-count).map(v => v ?? null)
 }
 
+export function mergeNutrition(
+  logs: DailyLogAnalytics[],
+  mealLogs: MealLogAnalytics[]
+): DailyLogAnalytics[] {
+  if (mealLogs.length === 0) return logs
+  const byDate = new Map<string, { calories: number; protein_g: number; fat_g: number; carbs_g: number }>()
+  for (const m of mealLogs) {
+    const cur = byDate.get(m.date) ?? { calories: 0, protein_g: 0, fat_g: 0, carbs_g: 0 }
+    byDate.set(m.date, {
+      calories: cur.calories + (m.calories ?? 0),
+      protein_g: cur.protein_g + (m.protein_g ?? 0),
+      fat_g: cur.fat_g + (m.fat_g ?? 0),
+      carbs_g: cur.carbs_g + (m.carbs_g ?? 0),
+    })
+  }
+  return logs.map(row => {
+    const meal = byDate.get(row.date)
+    if (!meal) return row
+    return { ...row, ...meal }
+  })
+}
+
 export function useAnalyticsForPeriod(startDate: string, endDate: string) {
   return useQuery<DailyLogAnalytics[]>({
     queryKey: ['daily-logs', 'analytics', startDate, endDate],

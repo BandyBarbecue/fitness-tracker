@@ -6,7 +6,7 @@ import { PeriodSelector, type Period } from '@/components/analytics/period-selec
 import { MetricSquare, type MetricSlug } from '@/components/analytics/metric-square'
 import {
   useAnalyticsForPeriod, useMealLogsForPeriod,
-  periodBounds, avgOf, hitRate, trendArrow, sparklineValues,
+  periodBounds, avgOf, hitRate, trendArrow, sparklineValues, mergeNutrition,
 } from '@/lib/queries/analytics'
 import { useTargets } from '@/lib/queries/targets'
 
@@ -48,23 +48,21 @@ export default function InsightsPage() {
   const { data: mealLogs = [] } = useMealLogsForPeriod(startDate, endDate)
   const { data: targets } = useTargets()
 
-  const weights   = logs.map(l => l.weight_kg)
-  const calories  = logs.map(l => l.calories)
-  const proteins  = logs.map(l => l.protein_g)
-  const steps     = logs.map(l => l.steps)
-  const sleeps    = logs.map(l => l.sleep_hours)
-  const moods     = logs.map(l => l.mood)
-  const waters    = logs.map(l => l.water_l)
-  const sessionBinary = logs.map(l =>
+  const enrichedLogs = mergeNutrition(logs, mealLogs)
+
+  const weights   = enrichedLogs.map(l => l.weight_kg)
+  const calories  = enrichedLogs.map(l => l.calories)
+  const proteins  = enrichedLogs.map(l => l.protein_g)
+  const steps     = enrichedLogs.map(l => l.steps)
+  const sleeps    = enrichedLogs.map(l => l.sleep_hours)
+  const moods     = enrichedLogs.map(l => l.mood)
+  const waters    = enrichedLogs.map(l => l.water_l)
+  const sessionBinary = enrichedLogs.map(l =>
     l.session_type ? (l.session_type !== 'rest' ? 1 : 0) : null
   )
 
-  // Macro protein % — prefer meal logs when available
-  const macroSource = mealLogs.length > 0
-    ? mealLogs.map(m => ({ calories: m.calories, protein_g: m.protein_g }))
-    : logs.map(l => ({ calories: l.calories, protein_g: l.protein_g }))
-  const totalKcal   = macroSource.reduce((s, m) => s + (m.calories ?? 0), 0)
-  const proteinKcal = macroSource.reduce((s, m) => s + ((m.protein_g ?? 0) * 4), 0)
+  const totalKcal   = enrichedLogs.reduce((s, l) => s + (l.calories ?? 0), 0)
+  const proteinKcal = enrichedLogs.reduce((s, l) => s + ((l.protein_g ?? 0) * 4), 0)
   const avgProteinPct = totalKcal > 0 ? Math.round(proteinKcal / totalKcal * 100) : null
 
   // Session type breakdown string
@@ -104,9 +102,9 @@ export default function InsightsPage() {
       case 'weight':   return sparklineValues(weights)
       case 'calories': return sparklineValues(calories)
       case 'protein':  return sparklineValues(proteins)
-      case 'macros':   return sparklineValues(macroSource.map(m => {
-        const total = m.calories ?? 0
-        const prot = m.protein_g ?? 0
+      case 'macros':   return sparklineValues(enrichedLogs.map(l => {
+        const total = l.calories ?? 0
+        const prot = l.protein_g ?? 0
         return total > 0 ? Math.round((prot * 4) / total * 100) : null
       }))
       case 'steps':    return sparklineValues(steps)

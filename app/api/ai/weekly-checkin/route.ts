@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       .gte('date', periodStart).lte('date', periodEnd)
       .order('date', { ascending: false }),
     supabase.from('targets').select('*').eq('user_id', user.id).maybeSingle(),
-    supabase.from('meal_logs').select('date, meal_type, calories, protein_g, fat_g, carbs_g')
+    supabase.from('meal_logs').select('date, meal_type, calories, protein_g, fat_g, carbs_g, note')
       .eq('user_id', user.id)
       .gte('date', periodStart).lte('date', periodEnd),
   ])

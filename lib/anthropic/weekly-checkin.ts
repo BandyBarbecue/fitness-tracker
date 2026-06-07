@@ -9,6 +9,8 @@ interface LogRow {
   calories: number | null; protein_g: number | null
   fat_g: number | null; carbs_g: number | null
   steps: number | null; session_type: string | null
+  sleep_hours: number | null; mood: number | null
+  water_l: number | null; note: string | null
 }
 
 export interface MealLogRow {
@@ -18,6 +20,7 @@ export interface MealLogRow {
   protein_g: number | null
   fat_g: number | null
   carbs_g: number | null
+  note: string | null
 }
 
 const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'] as const
@@ -77,12 +80,22 @@ export function buildCheckinPrompt(targets: Targets, logs: LogRow[], mealLogs: M
   const trendDir = weeklyDelta < 0 ? 'down' : weeklyDelta > 0 ? 'up' : 'flat'
 
   const table = [
-    'date       | weight | kcal | prot | fat | carbs | steps | session',
-    '-----------|--------|------|------|-----|-------|-------|--------',
+    'date       | weight | kcal | prot | fat | carbs | steps | sleep | mood | water | session',
+    '-----------|--------|------|------|-----|-------|-------|-------|------|-------|--------',
     ...logs.map(l =>
-      `${l.date} | ${l.weight_kg ?? '—'} | ${l.calories ?? '—'} | ${l.protein_g ?? '—'} | ${l.fat_g ?? '—'} | ${l.carbs_g ?? '—'} | ${l.steps ?? '—'} | ${l.session_type ?? '—'}`
+      `${l.date} | ${l.weight_kg ?? '—'} | ${l.calories ?? '—'} | ${l.protein_g ?? '—'} | ${l.fat_g ?? '—'} | ${l.carbs_g ?? '—'} | ${l.steps ?? '—'} | ${l.sleep_hours ?? '—'} | ${l.mood ?? '—'} | ${l.water_l ?? '—'} | ${l.session_type ?? '—'}`
     ),
   ].join('\n')
+
+  const dailyNotes = logs.filter(l => l.note)
+  const dailyNotesBlock = dailyNotes.length > 0
+    ? `\n\nDaily notes:\n${dailyNotes.map(l => `- ${l.date}: ${l.note}`).join('\n')}`
+    : ''
+
+  const mealNotes = mealLogs.filter(m => m.note)
+  const mealNotesBlock = mealNotes.length > 0
+    ? `\n\nMeal notes:\n${mealNotes.map(m => `- ${m.date} (${MEAL_LABELS[m.meal_type]}): ${m.note}`).join('\n')}`
+    : ''
 
   const mealDistribution = buildMealDistributionSection(mealLogs)
   const mealDistributionBlock = mealDistribution ? `\n\n${mealDistribution}` : ''
@@ -96,8 +109,8 @@ export function buildCheckinPrompt(targets: Targets, logs: LogRow[], mealLogs: M
 - Daily targets: ${targets.calories} kcal, ${targets.protein_g}g protein, ${targets.fat_g}g fat, ${targets.carbs_g}g carbs, ${targets.steps} steps
 - Fat-loss goal: ${targets.goal_rate_kg_per_week} kg/week
 
-Data for the last ${logs.length} logged days:
-${table}
+Data for the last ${logs.length} logged days (sleep in hours, mood on a 1–5 scale, water in litres):
+${table}${dailyNotesBlock}${mealNotesBlock}
 
 Computed stats:
 - Recent avg weight: ${Math.round(recentAvg * 10) / 10} kg (7-day trend: ${trendDir}, ${weeklyDelta > 0 ? '+' : ''}${weeklyDelta} kg)

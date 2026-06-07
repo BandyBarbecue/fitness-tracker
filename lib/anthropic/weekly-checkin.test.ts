@@ -9,9 +9,9 @@ const targets = {
 }
 
 const logs = [
-  { date: '2026-05-29', weight_kg: 86.2, calories: 2380, protein_g: 182, fat_g: 68, carbs_g: 252, steps: 9800, session_type: 'push' },
-  { date: '2026-05-30', weight_kg: 86.0, calories: 2420, protein_g: 190, fat_g: 71, carbs_g: 258, steps: 11200, session_type: 'pull' },
-  { date: '2026-05-31', weight_kg: 85.8, calories: 2300, protein_g: 175, fat_g: 65, carbs_g: 248, steps: 8900, session_type: 'rest' },
+  { date: '2026-05-29', weight_kg: 86.2, calories: 2380, protein_g: 182, fat_g: 68, carbs_g: 252, steps: 9800, session_type: 'push', sleep_hours: 7.5, mood: 4, water_l: 2.5, note: 'Felt strong on bench' },
+  { date: '2026-05-30', weight_kg: 86.0, calories: 2420, protein_g: 190, fat_g: 71, carbs_g: 258, steps: 11200, session_type: 'pull', sleep_hours: 6, mood: 3, water_l: 1.8, note: null },
+  { date: '2026-05-31', weight_kg: 85.8, calories: 2300, protein_g: 175, fat_g: 65, carbs_g: 248, steps: 8900, session_type: 'rest', sleep_hours: 8, mood: 5, water_l: 3.0, note: null },
 ]
 
 describe('buildCheckinPrompt', () => {
@@ -55,6 +55,27 @@ describe('buildCheckinPrompt', () => {
     expect(prompt).toContain('0 logged days')
     expect(prompt).toContain('0%')
   })
+
+  it('includes sleep, mood, and water in the data table', () => {
+    const prompt = buildCheckinPrompt(targets, logs)
+    expect(prompt).toContain('sleep | mood | water')
+    expect(prompt).toContain('7.5')
+    expect(prompt).toContain('| 4 |')
+    expect(prompt).toContain('2.5')
+  })
+
+  it('includes a daily notes section for days with notes', () => {
+    const prompt = buildCheckinPrompt(targets, logs)
+    expect(prompt).toContain('Daily notes:')
+    expect(prompt).toContain('- 2026-05-29: Felt strong on bench')
+    expect(prompt).not.toContain('2026-05-30: null')
+  })
+
+  it('omits the daily notes section when no logs have notes', () => {
+    const noNotes = logs.map(l => ({ ...l, note: null }))
+    const prompt = buildCheckinPrompt(targets, noNotes)
+    expect(prompt).not.toContain('Daily notes:')
+  })
 })
 
 describe('buildCheckinPrompt — meal distribution', () => {
@@ -65,11 +86,12 @@ describe('buildCheckinPrompt — meal distribution', () => {
     protein_g: number | null
     fat_g: number | null
     carbs_g: number | null
+    note: string | null
   }> = [
-    { date: '2026-05-29', meal_type: 'breakfast', calories: 400, protein_g: 30, fat_g: 12, carbs_g: 40 },
-    { date: '2026-05-29', meal_type: 'dinner', calories: 800, protein_g: 60, fat_g: 30, carbs_g: 70 },
-    { date: '2026-05-30', meal_type: 'breakfast', calories: 440, protein_g: 26, fat_g: 14, carbs_g: 44 },
-    { date: '2026-05-30', meal_type: 'dinner', calories: 760, protein_g: 56, fat_g: 28, carbs_g: 66 },
+    { date: '2026-05-29', meal_type: 'breakfast', calories: 400, protein_g: 30, fat_g: 12, carbs_g: 40, note: 'Ate out, estimated' },
+    { date: '2026-05-29', meal_type: 'dinner', calories: 800, protein_g: 60, fat_g: 30, carbs_g: 70, note: null },
+    { date: '2026-05-30', meal_type: 'breakfast', calories: 440, protein_g: 26, fat_g: 14, carbs_g: 44, note: null },
+    { date: '2026-05-30', meal_type: 'dinner', calories: 760, protein_g: 56, fat_g: 28, carbs_g: 66, note: null },
   ]
 
   it('includes a meal distribution section when meal logs are present', () => {
@@ -99,5 +121,18 @@ describe('buildCheckinPrompt — meal distribution', () => {
   it('does not mention meal distribution in the coaching instructions when absent', () => {
     const prompt = buildCheckinPrompt(targets, logs)
     expect(prompt).not.toContain('how protein and calories are distributed across meals')
+  })
+
+  it('includes a meal notes section for meals with notes', () => {
+    const prompt = buildCheckinPrompt(targets, logs, mealLogs)
+    expect(prompt).toContain('Meal notes:')
+    expect(prompt).toContain('- 2026-05-29 (Breakfast): Ate out, estimated')
+    expect(prompt).not.toContain('2026-05-29 (Dinner): null')
+  })
+
+  it('omits the meal notes section when no meal logs have notes', () => {
+    const noNotes = mealLogs.map(m => ({ ...m, note: null }))
+    const prompt = buildCheckinPrompt(targets, logs, noNotes)
+    expect(prompt).not.toContain('Meal notes:')
   })
 })

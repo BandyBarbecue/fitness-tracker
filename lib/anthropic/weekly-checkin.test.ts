@@ -136,3 +136,69 @@ describe('buildCheckinPrompt — meal distribution', () => {
     expect(prompt).not.toContain('Meal notes:')
   })
 })
+
+describe('buildCheckinPrompt — extended stats', () => {
+  const extTargets = {
+    calories: 2400, protein_g: 185, fat_g: 70, carbs_g: 255,
+    steps: 10000, goal_rate_kg_per_week: 0.5,
+    bodyweight_kg: 86, height_cm: 188,
+    training_split: 'Push/Pull/Legs/Upper',
+  }
+  const extLogs = [
+    { date: '2026-05-29', weight_kg: 86.2, calories: 2380, protein_g: 182, fat_g: 68, carbs_g: 252,
+      steps: 9800, session_type: 'push', sleep_hours: 7.5, mood: 4, water_l: 2.5, note: null },
+    { date: '2026-05-30', weight_kg: 86.0, calories: 2420, protein_g: 190, fat_g: 71, carbs_g: 258,
+      steps: 11200, session_type: 'pull', sleep_hours: 6.0, mood: 3, water_l: 1.8, note: null },
+    { date: '2026-05-31', weight_kg: 85.8, calories: 2300, protein_g: 175, fat_g: 65, carbs_g: 248,
+      steps: 8900, session_type: 'rest', sleep_hours: 8.0, mood: 5, water_l: 3.0, note: null },
+  ]
+
+  it('includes avg sleep in computed stats', () => {
+    // (7.5 + 6.0 + 8.0) / 3 = 7.2
+    const prompt = buildCheckinPrompt(extTargets, extLogs)
+    expect(prompt).toContain('Avg sleep: 7.2 hr')
+  })
+
+  it('includes avg mood in computed stats', () => {
+    // (4 + 3 + 5) / 3 = 4
+    const prompt = buildCheckinPrompt(extTargets, extLogs)
+    expect(prompt).toContain('Avg mood: 4/5')
+  })
+
+  it('includes avg water in computed stats', () => {
+    // (2.5 + 1.8 + 3.0) / 3 = 2.4
+    const prompt = buildCheckinPrompt(extTargets, extLogs)
+    expect(prompt).toContain('Avg water: 2.4 L')
+  })
+
+  it('includes steps hit rate in computed stats', () => {
+    // 9800 < 10000 (miss), 11200 >= 10000 (hit), 8900 < 10000 (miss) → 1/3 = 33%
+    const prompt = buildCheckinPrompt(extTargets, extLogs)
+    expect(prompt).toContain('Steps target hit rate: 33%')
+  })
+
+  it('includes session breakdown in computed stats', () => {
+    const prompt = buildCheckinPrompt(extTargets, extLogs)
+    expect(prompt).toContain('Sessions:')
+    expect(prompt).toContain('Push ×1')
+    expect(prompt).toContain('Pull ×1')
+    expect(prompt).toContain('Rest ×1')
+  })
+
+  it('extends coaching instruction to include sleep/mood/hydration/training frequency', () => {
+    const prompt = buildCheckinPrompt(extTargets, extLogs)
+    expect(prompt).toContain('sleep quality and trends')
+    expect(prompt).toContain('mood patterns')
+    expect(prompt).toContain('hydration')
+    expect(prompt).toContain('training frequency')
+  })
+
+  it('handles null sleep/mood/water gracefully', () => {
+    const nullLogs = extLogs.map(l => ({ ...l, sleep_hours: null, mood: null, water_l: null }))
+    const prompt = buildCheckinPrompt(extTargets, nullLogs)
+    expect(prompt).toContain('Avg sleep: not logged')
+    expect(prompt).toContain('Avg mood: not logged')
+    expect(prompt).toContain('Avg water: not logged')
+    expect(prompt).not.toMatch(/NaN|undefined/)
+  })
+})

@@ -79,6 +79,38 @@ export function buildCheckinPrompt(targets: Targets, logs: LogRow[], mealLogs: M
   const weeklyDelta = Math.round((recentAvg - olderAvg) * 100) / 100
   const trendDir = weeklyDelta < 0 ? 'down' : weeklyDelta > 0 ? 'up' : 'flat'
 
+  const sleepLogged = logs.filter(l => l.sleep_hours != null)
+  const avgSleep = sleepLogged.length > 0
+    ? Math.round(sleepLogged.reduce((s, l) => s + l.sleep_hours!, 0) / sleepLogged.length * 10) / 10
+    : null
+
+  const moodLogged = logs.filter(l => l.mood != null)
+  const avgMood = moodLogged.length > 0
+    ? Math.round(moodLogged.reduce((s, l) => s + l.mood!, 0) / moodLogged.length * 10) / 10
+    : null
+
+  const waterLogged = logs.filter(l => l.water_l != null)
+  const avgWater = waterLogged.length > 0
+    ? Math.round(waterLogged.reduce((s, l) => s + l.water_l!, 0) / waterLogged.length * 10) / 10
+    : null
+
+  const stepsLoggedRows = logs.filter(l => l.steps != null)
+  const stepsHits = stepsLoggedRows.filter(l => l.steps! >= targets.steps).length
+  const stepsHitRate = stepsLoggedRows.length > 0
+    ? Math.round(stepsHits / stepsLoggedRows.length * 100)
+    : 0
+
+  const SESSION_LABELS_SHORT: Record<string, string> = {
+    push: 'Push', pull: 'Pull', legs: 'Legs', upper: 'Upper', rest: 'Rest', cardio: 'Cardio',
+  }
+  const sessionCounts: Record<string, number> = {}
+  for (const l of logs) {
+    if (l.session_type) sessionCounts[l.session_type] = (sessionCounts[l.session_type] ?? 0) + 1
+  }
+  const sessionBreakdown = Object.entries(sessionCounts)
+    .map(([t, n]) => `${SESSION_LABELS_SHORT[t] ?? t} ×${n}`)
+    .join(', ') || 'none logged'
+
   const table = [
     'date       | weight | kcal | prot | fat | carbs | steps | sleep | mood | water | session',
     '-----------|--------|------|------|-----|-------|-------|-------|------|-------|--------',
@@ -115,7 +147,12 @@ ${table}${dailyNotesBlock}${mealNotesBlock}
 Computed stats:
 - Recent avg weight: ${Math.round(recentAvg * 10) / 10} kg (7-day trend: ${trendDir}, ${weeklyDelta > 0 ? '+' : ''}${weeklyDelta} kg)
 - Protein target hit rate: ${proteinHitRate}% of logged days
+- Steps target hit rate: ${stepsHitRate}% of logged days
+- Avg sleep: ${avgSleep != null ? `${avgSleep} hr` : 'not logged'}
+- Avg mood: ${avgMood != null ? `${avgMood}/5` : 'not logged'}
+- Avg water: ${avgWater != null ? `${avgWater} L` : 'not logged'}
+- Sessions: ${sessionBreakdown}
 - Days logged: ${logs.length}${mealDistributionBlock}
 
-Write a concise coaching summary in 3–5 short paragraphs. Cover: weight trend vs goal rate, protein adherence${coverageNote}, what's going well, one specific actionable focus for this week. Be direct. No bullet points. No sign-off.`
+Write a concise coaching summary in 3–5 short paragraphs. Cover: weight trend vs goal rate, protein adherence${coverageNote}, sleep quality and trends, mood patterns, hydration, and training frequency — and whether any of these correlate with weight or energy patterns in the data, what's going well, one specific actionable focus for this week. Be direct. No bullet points. No sign-off.`
 }

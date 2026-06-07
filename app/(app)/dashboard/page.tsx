@@ -1,7 +1,7 @@
 import { WeightChart } from '@/components/dashboard/weight-chart'
 import { ProteinCard } from '@/components/dashboard/protein-card'
 import { StreakRow } from '@/components/dashboard/streak-row'
-import { DashboardMetrics } from './dashboard-metrics'
+import { TodayGlanceCard } from '@/components/dashboard/today-glance-card'
 
 export default function DashboardPage() {
   return (
@@ -9,7 +9,7 @@ export default function DashboardPage() {
       <h1 className="text-lg font-bold mb-1" style={{ color: 'var(--text-primary)' }}>Dashboard</h1>
       <div className="animate-fade-in-up animate-stagger-1"><WeightChart /></div>
       <div className="animate-fade-in-up animate-stagger-2"><ProteinCard /></div>
-      <div className="animate-fade-in-up animate-stagger-3"><DashboardMetrics /></div>
+      <div className="animate-fade-in-up animate-stagger-3"><TodayGlanceCard /></div>
       <div className="animate-fade-in-up animate-stagger-4"><StreakRow /></div>
     </div>
   )

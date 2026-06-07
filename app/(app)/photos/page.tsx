@@ -1,5 +1,5 @@
-import { PhotoGallery } from '@/components/photos/photo-gallery'
+import { redirect } from 'next/navigation'
 
 export default function PhotosPage() {
-  return <PhotoGallery />
+  redirect('/insights/photos')
 }

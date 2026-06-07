@@ -1,15 +1,15 @@
 'use client'
-import { useDailyLog } from '@/lib/queries/daily-logs'
+import { useNutritionForDate } from '@/lib/queries/meal-logs'
 import { useTargets } from '@/lib/queries/targets'
 import { pct, fmtNum } from '@/lib/utils/format'
 import { format } from 'date-fns'
 
 export function ProteinCard() {
   const today = format(new Date(), 'yyyy-MM-dd')
-  const { data: log } = useDailyLog(today)
+  const { data: nutrition } = useNutritionForDate(today)
   const { data: targets } = useTargets()
 
-  const protein = log?.protein_g ?? null
+  const protein = nutrition?.protein_g ?? null
   const target = targets?.protein_g ?? 185
   const p = pct(protein, target)
   const label = p >= 95 ? 'great' : p >= 80 ? 'on track' : p > 0 ? 'keep going' : 'not logged'
